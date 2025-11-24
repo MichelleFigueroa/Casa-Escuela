@@ -1,0 +1,207 @@
+﻿@{
+    ViewData["Title"] = "Panel General";
+}
+
+<div class="dashboard-container">
+
+    <div class="dashboard-grid">
+
+        <!-- Estudiantes Registrados -->
+        <div class="card metric-card card-blue">
+            <i class="fas fa-user-graduate icon"></i>
+            <span class="label">Estudiantes Registrados</span>
+            <span class="value">@ViewBag.TotalEstudiantes</span>
+        </div>
+
+        <!-- Expedientes Activos -->
+        <div class="card metric-card card-green">
+            <i class="fas fa-folder-open icon"></i>
+            <span class="label">Expedientes Activos</span>
+            <span class="value">@ViewBag.ExpedientesActivos</span>
+        </div>
+
+        <!-- Anamnesis -->
+        <div class="card metric-card card-orange">
+            <i class="fas fa-file-medical icon"></i>
+            <span class="label">Anamnesis Registradas</span>
+            <span class="value">@ViewBag.TotalAnamnesis</span>
+        </div>
+
+        <!-- Preceptorías -->
+        <div class="card metric-card card-gray">
+            <i class="fas fa-clipboard-list icon"></i>
+            <span class="label">Preceptorías Registradas</span>
+            <span class="value">@ViewBag.TotalPreceptorias</span>
+        </div>
+
+        <!-- Análisis Psicológicos -->
+        <div class="card metric-card card-red">
+            <i class="fas fa-brain icon"></i>
+            <span class="label">Análisis Psicológicos</span>
+            <span class="value">@ViewBag.TotalAnalisis</span>
+        </div>
+
+        <!-- Documentos Subidos -->
+        <div class="card metric-card card-darkgreen">
+            <i class="fas fa-file-upload icon"></i>
+            <span class="label">Documentos Subidos</span>
+            <span class="value">@ViewBag.TotalDocumentos</span>
+        </div>
+
+        <!-- Post Clase -->
+        <div class="card metric-card card-purple">
+            <i class="fas fa-chalkboard-teacher icon"></i>
+            <span class="label">Registros Post-Clase</span>
+            <span class="value">@ViewBag.TotalPostClase</span>
+        </div>
+
+        <!-- Usuarios activos -->
+        <div class="card metric-card card-yellow">
+            <i class="fas fa-users icon"></i>
+            <span class="label">Usuarios Activos</span>
+            <span class="value">@ViewBag.UsuariosActivos</span>
+        </div>
+
+    </div>
+</div>
+
+<style>
+
+    /* Contenedor */
+    .dashboard-container {
+        padding: 20px;
+    }
+
+    /* GRID */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    /* CARD BASE – Glassmorphism */
+    .metric-card {
+        padding: 26px;
+        border-radius: 18px;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        /* Glass */
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        /* Animaciones */
+        transition: transform .25s ease, box-shadow .25s ease, border .25s ease;
+    }
+
+        .metric-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+        }
+
+    /* ICONO */
+    .icon {
+        font-size: 34px;
+        margin-bottom: 10px;
+    }
+
+    /* TEXTO */
+    .label {
+        font-size: 14px;
+        opacity: .85;
+    }
+
+    .value {
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 6px;
+    }
+
+    /* --- 🎨 PALETA LIGHT MODE (COLORES FUERTES) --- */
+
+    .card-blue {
+        background: linear-gradient(135deg, #1E40AF, #3B82F6);
+        color: white;
+    }
+
+    .card-green {
+        background: linear-gradient(135deg, #047857, #34D399);
+        color: white;
+    }
+
+    .card-orange {
+        background: linear-gradient(135deg, #C2410C, #FB923C);
+        color: white;
+    }
+
+    .card-gray {
+        background: linear-gradient(135deg, #334155, #64748B);
+        color: white;
+    }
+
+    .card-red {
+        background: linear-gradient(135deg, #B91C1C, #EF4444);
+        color: white;
+    }
+
+    .card-darkgreen {
+        background: linear-gradient(135deg, #064E3B, #10B981);
+        color: white;
+    }
+
+    .card-purple {
+        background: linear-gradient(135deg, #5B21B6, #8B5CF6);
+        color: white;
+    }
+
+    .card-yellow {
+        background: linear-gradient(135deg, #A16207, #FACC15);
+        color: #222; /* más legible en amarillo */
+    }
+
+    /* --- 🌙 DARK MODE (real, con contraste y color) --- */
+
+    [data-bs-theme="dark"] .metric-card {
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    [data-bs-theme="dark"] .card-blue {
+        background: linear-gradient(135deg, #1E3A8Acc, #3B82F6cc);
+    }
+
+    [data-bs-theme="dark"] .card-green {
+        background: linear-gradient(135deg, #065F46cc, #10B981cc);
+    }
+
+    [data-bs-theme="dark"] .card-orange {
+        background: linear-gradient(135deg, #B45309cc, #F59E0Bcc);
+    }
+
+    [data-bs-theme="dark"] .card-gray {
+        background: linear-gradient(135deg, #1E293Bcc, #475569cc);
+    }
+
+    [data-bs-theme="dark"] .card-red {
+        background: linear-gradient(135deg, #7F1D1Dcc, #EF4444cc);
+    }
+
+    [data-bs-theme="dark"] .card-darkgreen {
+        background: linear-gradient(135deg, #064E3Bcc, #059669cc);
+    }
+
+    [data-bs-theme="dark"] .card-purple {
+        background: linear-gradient(135deg, #4C1D95cc, #8B5CF6cc);
+    }
+
+    [data-bs-theme="dark"] .card-yellow {
+        background: linear-gradient(135deg, #B45309cc, #FACC15cc);
+    }
+
+
+
+
+</style>

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="FiadorDAL.cs~RF15825fd.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0-alpha.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CasaEscuela.BL.DTOs\CasaEscuela.BL.DTOs.csproj" />
+    <ProjectReference Include="..\CasaEscuela.BL.Interfaces\CasaEscuela.BL.Interfaces.csproj" />
+    <ProjectReference Include="..\CasaEscuela.EN\CasaEscuela.EN.csproj" />
+  </ItemGroup>
+
+</Project>

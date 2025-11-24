@@ -1,0 +1,215 @@
+﻿@model UsuarioMantDTO
+@{
+    ViewData["Title"] = "Form Usuario";
+    ActionsUI action = ViewBag.ActionsUI as ActionsUI;
+}
+<div class="card shadow mb-4">
+    <div class="card-header bg-gradient-primary text-white py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold">@action.ObtenerTitulo("Usuario")</h6>
+    </div>
+    <form asp-action="@action.ObtenerAccion()">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <!-- DATOS PERSONALES -->
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label asp-for="DUI" class="control-label"></label>
+                    <input asp-for="DUI" id="duiUsuario" class="form-control" data-disabledui_eliminar data-disabledui_ver maxlength="9" />
+                    <span asp-validation-for="DUI" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" data-disabledui_eliminar data-disabledui_ver />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label asp-for="Apellido" class="control-label"></label>
+                    <input asp-for="Apellido" class="form-control" data-disabledui_eliminar data-disabledui_ver />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" data-disabledui_eliminar data-disabledui_ver />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="row">
+            @if (!action.SiTraerDatos())
+            {
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control" data-disabledui_eliminar data-disabledui_ver />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="control-label"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" data-disabledui_eliminar data-disabledui_ver />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label asp-for="Estado" class="control-label">Estado</label>
+                    <select id="slEstado" asp-for="Estado" class="form-control" data-disabledui_eliminar data-disabledui_ver>
+                        <option value="1">Activo</option>
+                        <option value="0">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- PERMISOS -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <h5 class="mb-3">Permisos del Usuario</h5>
+
+                @{
+                    var iconosModulo = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                { "ventas", "fas fa-shopping-cart" },
+                { "compras", "fas fa-credit-card" },
+                { "inventario", "fas fa-warehouse" },
+                { "productos", "fas fa-box-open" },
+                { "usuarios", "fas fa-user" },
+                { "caja", "fas fa-cash-register" },
+                { "bodega", "fas fa-building" },
+                { "seguridad", "fas fa-shield-alt" }
+                };
+
+                    var coloresModulo = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                { "ventas", "bg-gradient-warning text-white" },
+                { "compras", "bg-gradient-info text-white" },
+                { "inventario", "bg-gradient-primary text-white" },
+                { "productos", "bg-gradient-success text-white" },
+                { "usuarios", "bg-gradient-secondary text-white" },
+                { "caja", "bg-gradient-dark text-white" },
+                { "bodega", "bg-gradient-info text-white" },
+                { "seguridad", "bg-gradient-danger text-white" }
+                };
+
+                    int index = 0;
+                }
+
+                @foreach (var grupo in Model.Permisoss.GroupBy(p => p.Modulo))
+                {
+                    var menuList = ViewBag.Menu as List<MenuDTO>;
+                    var modulo = menuList?.FirstOrDefault(m => m.Nombre.Equals(grupo.Key, StringComparison.OrdinalIgnoreCase));
+                    var icono = modulo != null && iconosModulo.ContainsKey(modulo.Nombre) ? iconosModulo[modulo.Nombre] : "fas fa-folder";
+                    var colorCard = modulo != null && coloresModulo.ContainsKey(modulo.Nombre) ? coloresModulo[modulo.Nombre] : "bg-light";
+
+                    var bodyId = $"body_{index}";
+                    index++;
+
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center @colorCard toggle-body" data-target="#@bodyId" style="cursor:pointer;">
+                            <div>
+                                <i class="@icono me-2"></i>
+                                <span class="fw-bold">@grupo.Key</span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-light">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="card-body d-none" id="@bodyId">
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input select-all" id="selectAll_@grupo.Key" data-group="@grupo.Key" />
+                                <label class="form-check-label fw-bold text-primary" for="selectAll_@grupo.Key">
+                                    <i class="fas fa-check-double"></i> Seleccionar todo
+                                </label>
+                            </div>
+                            <hr />
+                            @foreach (var permiso in grupo)
+                            {
+                                <div class="form-check form-switch mb-2">
+                                    <input type="checkbox"
+                                           class="form-check-input permiso-item permiso-@grupo.Key"
+                                           id="permiso_@permiso.Id"
+                                           name="Permisos"
+                                           value="@permiso.Id"
+                                    @(permiso.Asignado ? "checked" : "") />
+                                    <label class="form-check-label fw-semibold" for="permiso_@permiso.Id">
+                                        @permiso.NombreAmigable
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <br />
+        <div class="form-group text-end">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> @action.ObtenerNombreBoton()
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#duiUsuario").mask('00000000-0');
+        });
+        ActionsUI.init('@action.ObtenerAccionJs()');
+        $("#slRol").val('@Model.IdRol');
+        $("#slEstado").val('@Model.Estado');
+
+        // Mostrar/Ocultar módulo al hacer click en cualquier parte del header
+        $(document).on("click", ".toggle-body", function (e) {
+            // Evitar doble toggle si se hace click en el botón interno
+            if (!$(e.target).is("button, i")) {
+                var target = $(this).data("target");
+                $(target).toggleClass("d-none");
+                $(this).find("i").toggleClass("fa-chevron-down fa-chevron-up");
+            }
+        });
+
+        // Seleccionar todo por grupo
+        $(document).on("change", ".select-all", function () {
+            var group = $(this).data("group");
+            var isChecked = $(this).prop("checked");
+            $(".permiso-" + group).prop("checked", isChecked);
+        });
+
+        // Mantener estado del "Seleccionar todo"
+        $(document).on("change", ".permiso-item", function () {
+            var group = $(this).attr("class").match(/permiso-([^\s]+)/)[1];
+            var allChecked = $(".permiso-" + group).length === $(".permiso-" + group + ":checked").length;
+            $("#selectAll_" + group).prop("checked", allChecked);
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    @if (action.SiTraerDatos())
+    {
+        <script>
+            $(function () {
+                $("form input[name]").trigger("blur");
+            });
+        </script>
+    }
+}

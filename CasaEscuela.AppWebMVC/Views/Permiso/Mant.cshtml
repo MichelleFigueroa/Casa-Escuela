@@ -1,0 +1,109 @@
+﻿@using CasaEscuela.BL.DTOs.PermisosDTOs
+@using CasaEscuela.BL.DTOs.UsuarioDTOs
+@using CasaEscuela.AppWebMVC.Models
+@model List<PermisoDTO>
+
+@{
+    ViewData["Title"] = "Permisos Usuario";
+
+    var action = ViewBag.ActionsUI as ActionsUI ?? new ActionsUI { Accion = (int)ActionsUI_Enums.MODIFICAR };
+    var empleados = ViewBag.Empleados as List<UsuarioMantDTO> ?? new List<UsuarioMantDTO>();
+    var vistas = ViewBag.VistasDisponibles as List<string> ?? new List<string>();
+    int usuarioId = Model.FirstOrDefault()?.IdUsuario ?? (empleados.Count > 0 ? empleados[0].Id : 0);
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header bg-gradient-primary text-white py-3">
+        <h6 class="m-0 font-weight-bold">@action.ObtenerTitulo("Permisos de Usuario")</h6>
+    </div>
+    <div class="card-body animate__animated animate__fadeIn">
+        <form asp-action="Mant" method="post">
+            <input type="hidden" name="pAccion.Accion" value="@(action?.Accion ?? 0)" />
+            <input type="hidden" name="IdUsuario" value="@usuarioId" />
+
+            <!-- Selector de usuario -->
+            <div class="mb-3">
+                <label><strong>Empleado:</strong></label>
+                <select class="form-select" name="IdUsuario">
+                    @foreach (var emp in empleados)
+                    {
+                        <option value="@emp.Id" selected="@(emp.Id == usuarioId ? "selected" : null)">
+                            @emp.Nombre @emp.Apellido
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <!-- Tabla de permisos -->
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Vista</th>
+                        <th>Crear <input type="checkbox" id="selectAllCrear" /></th>
+                        <th>Editar <input type="checkbox" id="selectAllEditar" /></th>
+                        <th>Eliminar <input type="checkbox" id="selectAllEliminar" /></th>
+                        <th>Ver <input type="checkbox" id="selectAllVer" /></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < vistas.Count; i++)
+                    {
+                        var permiso = Model.FirstOrDefault(m => m.Vista == vistas[i]) ?? new PermisoDTO { Vista = vistas[i], Id = 0, IdUsuario = usuarioId };
+                        <tr>
+                            <td>
+                                @vistas[i]
+                                <input type="hidden" name="[@i].Id" value="@permiso.Id" />
+                                <input type="hidden" name="[@i].IdUsuario" value="@usuarioId" />
+                                <input type="hidden" name="[@i].Vista" value="@permiso.Vista" />
+                            </td>
+                            <td>
+                                <input type="hidden" name="[@i].PuedeCrear" value="false" />
+                                <input type="checkbox" name="[@i].PuedeCrear" value="true" @(permiso.PuedeCrear ? "checked" : "") />
+                            </td>
+                            <td>
+                                <input type="hidden" name="[@i].PuedeEditar" value="false" />
+                                <input type="checkbox" name="[@i].PuedeEditar" value="true" @(permiso.PuedeEditar ? "checked" : "") />
+                            </td>
+                            <td>
+                                <input type="hidden" name="[@i].PuedeEliminar" value="false" />
+                                <input type="checkbox" name="[@i].PuedeEliminar" value="true" @(permiso.PuedeEliminar ? "checked" : "") />
+                            </td>
+                            <td>
+                                <input type="hidden" name="[@i].PuedeVer" value="false" />
+                                <input type="checkbox" name="[@i].PuedeVer" value="true" @(permiso.PuedeVer ? "checked" : "") />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="form-group text-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> @action.ObtenerNombreBoton()
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#selectAllCrear").change(function () {
+                $("input[name$='.PuedeCrear']").prop('checked', this.checked);
+            });
+            $("#selectAllEditar").change(function () {
+                $("input[name$='.PuedeEditar']").prop('checked', this.checked);
+            });
+            $("#selectAllEliminar").change(function () {
+                $("input[name$='.PuedeEliminar']").prop('checked', this.checked);
+            });
+            $("#selectAllVer").change(function () {
+                $("input[name$='.PuedeVer']").prop('checked', this.checked);
+            });
+        });
+    </script>
+}

@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  ascobra-sysfinanciero:
+    build:
+      context: .
+      dockerfile:  ASCOBRA.SysFinanciero.AppWebMVC/Dockerfile
+    ports:
+      - "55000:80"   # Exponer el puerto 80
+      - "55001:443" # Exponer el puerto 443
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development # Ajusta según tus necesidades
+    volumes:
+      - .:/app # Montar el directorio actual en /app dentro del contenedor

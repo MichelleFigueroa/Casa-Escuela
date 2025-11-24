@@ -1,0 +1,133 @@
+﻿@model IEnumerable<UsuarioMantDTO>
+@{
+    ViewData["Title"] = "Buscar Usuario";
+}  
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h5 class="m-0 text-primary"><i class="fas fa-search"></i> Buscar Usuarios</h5>
+        @Html.ActionLinkIfPermiso(
+        "➕ Nuevo Usuario",
+                "Mant",
+                new { Id = 0, accion = (int)ActionsUI_Enums.NUEVO },
+                new { @class = "btn btn-sm btn-primary" },
+                 "USUARIO_CREAR"
+                )
+
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form asp-action="Index">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label">DUI</label>
+                                <input type="text" class="form-control" name="dui_like" />
+                            </div>
+                        </div>
+                         <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Nombre</label>
+                                <input type="text" class="form-control" name="nombre_like" />
+                            </div>
+                        </div>
+                         <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Apellido</label>
+                                <input type="text" class="form-control" name="apellido_like" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Email</label>
+                                <input type="text" class="form-control" name="email_equal" />
+                            </div>
+                        </div>
+                        
+                        <div class="text-right mt-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Usuarios</h6>
+    </div>
+    <div class="card-body">
+        <!-- Tabla en pantallas grandes -->
+        <div class="table-responsive d-none d-md-block">
+            <table id="tbUsuarios" class="table table-bordered" width="100%" cellspacing="0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.DUI)</th>
+                        <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                        <th>@Html.DisplayNameFor(model => model.Apellido)</th>
+                        <th>@Html.DisplayNameFor(model => model.Email)</th>
+                        <th>Sucursal</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.DUI)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Apellido)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td class="botonestabla">
+                                @Html.ActionLinkIfPermiso("Modificar", "Mant", new { Id = item.Id, Accion = (int)ActionsUI_Enums.MODIFICAR }, new { @class = "btn btn-success btn-sm mr-1" }, "USUARIO_EDITAR")
+                                @Html.ActionLinkIfPermiso("Ver", "Mant", new { Id = item.Id, Accion = (int)ActionsUI_Enums.VER }, new { @class = "btn btn-info btn-sm mr-1" }, "USUARIO_VER")
+                                @Html.ActionLinkIfPermiso("Eliminar", "Mant", new { Id = item.Id, Accion = (int)ActionsUI_Enums.ELIMINAR }, new { @class = "btn btn-danger btn-sm" }, "USUARIO_ELIMINAR")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tarjetas para pantallas pequeñas -->
+        <div class="d-block d-md-none">
+            @foreach (var item in Model)
+            {
+                <div class="card mb-3 sborder-left-primary shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-user"></i> @item.Nombre</h5>
+                        <p><strong>@Html.DisplayNameFor(model => model.DUI):</strong> @item.DUI</p>
+                        <p><strong>@Html.DisplayNameFor(model => model.Apellido):</strong> @item.Apellido</p>
+                        <p><strong>@Html.DisplayNameFor(model => model.Email):</strong> @item.Email</p>
+
+                        <td class="botonestabla">
+                            @Html.ActionLinkIfPermiso("Modificar", "Mant", new { Id = item.Id, Accion = (int)ActionsUI_Enums.MODIFICAR }, new { @class = "btn btn-success btn-sm mr-1" }, "EDITAR_USUARIO")
+                            @Html.ActionLinkIfPermiso("Ver", "Mant", new { Id = item.Id, Accion = (int)ActionsUI_Enums.VER }, new { @class = "btn btn-info btn-sm mr-1" }, "VER_USUARIO")
+                            @Html.ActionLinkIfPermiso("Eliminar", "Mant", new { Id = item.Id, Accion = (int)ActionsUI_Enums.ELIMINAR }, new { @class = "btn btn-danger btn-sm" }, "ELIMINAR_USUARIO")
+                        </td>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#tbUsuarios').DataTable({
+                paging: false,
+                searching: false,
+                ordering: false
+            });
+        });
+    </script>
+    }
+
+

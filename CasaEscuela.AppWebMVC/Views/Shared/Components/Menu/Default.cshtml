@@ -1,0 +1,24 @@
+﻿@model List<MenuDTO>
+
+<ul class="pc-navbar">
+    @foreach (var menu in Model)
+    {
+        <li class="pc-item pc-hasmenu">
+            <a href="#!" class="pc-link">
+                <span class="pc-micon"><i class="@menu.Icono"></i></span>
+                <span class="pc-mtext">@menu.Nombre</span>
+                <span class="pc-arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+            <ul class="pc-submenu">
+                @foreach (var sub in menu.SubMenu)
+                {
+                    <li class="pc-item">
+                        <a class="pc-link" href="@sub.Url">
+                            <i class="@sub.Icono"></i> @sub.Nombre
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+</ul>
