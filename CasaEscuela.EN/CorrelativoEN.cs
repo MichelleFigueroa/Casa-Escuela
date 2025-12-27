@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CasaEscuela.EN
 {
-    public class Correlativo
+    public class CorrelativoEN
     {
         public byte Id { get; set; }
         public byte Tipo { get; set; }

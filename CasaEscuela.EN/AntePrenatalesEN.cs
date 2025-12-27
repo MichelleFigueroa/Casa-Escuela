@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CasaEscuela.EN
 {
-    public class AntePrenatales
+    public class AntePrenatalesEN
     {
         public int Id { get; set; }
 

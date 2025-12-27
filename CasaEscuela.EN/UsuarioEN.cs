@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CasaEscuela.EN
 {
-    public class Usuario
+    public class UsuarioEN
     {
         public int Id { get; set; }
         public string DUI { get; set; }

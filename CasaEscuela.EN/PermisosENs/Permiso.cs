@@ -21,6 +21,6 @@ namespace CasaEscuela.EN.PermisosENs
         public bool PuedeEditar { get; set; }
         public bool PuedeEliminar { get; set; }
 
-        public Usuario Usuario { get; set; }
+        public UsuarioEN Usuario { get; set; }
     }
 }

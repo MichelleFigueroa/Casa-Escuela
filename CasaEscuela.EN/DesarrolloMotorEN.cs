@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace CasaEscuela.EN
 {
-    public class Desarrollo_Lenguaje
+    public class DesarrolloMotorEN
     {
         public int Id { get; set; }
 
         public string Descripcion { get; set; }
-
-        public int IdEntrevista { get; set; }
     }
 }
