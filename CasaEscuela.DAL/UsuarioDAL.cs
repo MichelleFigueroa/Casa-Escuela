@@ -13,7 +13,7 @@ namespace CasaEscuela.DAL
     {
         readonly CasaEscuelaDBContext dbContext;
         public UsuarioDAL(CasaEscuelaDBContext context) => dbContext = context;
-		internal IQueryable<Usuario> QuerySelect(IQueryable<Usuario> pQuery, UsuarioBuscarDTO pUsuario)
+		internal IQueryable<UsuarioEN> QuerySelect(IQueryable<UsuarioEN> pQuery, UsuarioBuscarDTO pUsuario)
 		{
 			if (!string.IsNullOrWhiteSpace(pUsuario.Nombre_like))
 				pQuery = pQuery.Where(s => s.Nombre.Contains(pUsuario.Nombre_like));
@@ -81,7 +81,7 @@ namespace CasaEscuela.DAL
 
         public async Task<int> CrearAsync(UsuarioMantDTO pUsuario)
         {
-            Usuario usuario = new Usuario()
+            UsuarioEN usuario = new UsuarioEN()
             {
                 Nombre = pUsuario.Nombre,
                 Apellido = pUsuario.Apellido,

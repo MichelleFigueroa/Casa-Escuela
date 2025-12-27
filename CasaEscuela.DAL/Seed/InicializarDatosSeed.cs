@@ -87,7 +87,7 @@ namespace CasaEscuela.DAL.Seed
             #region Crear usuario ROOT
             if (!dbContext.Usuarios.Any(u => u.Email == "root@admin.com"))
             {
-                var root = new Usuario
+                var root = new UsuarioEN
                 {
                     DUI = "000000000",
                     Nombre = "Super",

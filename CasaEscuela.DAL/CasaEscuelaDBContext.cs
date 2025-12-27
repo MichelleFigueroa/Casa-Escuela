@@ -21,8 +21,8 @@ namespace CasaEscuela.DAL
        
 
 
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Correlativo> Correlativos { get; set; }
+        public DbSet<UsuarioEN> Usuarios { get; set; }
+        public DbSet<CorrelativoEN> Correlativos { get; set; }
        
         public DbSet<Permiso> Permisos { get; set; }
         public DbSet<UsuarioPermiso> UsuarioPermisos { get; set; }
@@ -51,15 +51,15 @@ namespace CasaEscuela.DAL
             // registro varias entonces rol con usuario es de uno a muchos
             // Usuario en usuario esta el RolId eso significa que cada registro de un usuario
             // puede referencia a un rol entonce la relacion de usuario y rol de uno a uno
-            modelBuilder.Entity<Usuario>().ToTable("usuarios");
-            modelBuilder.Entity<Usuario>().HasKey(s => s.Id);
+            modelBuilder.Entity<UsuarioEN>().ToTable("usuarios");
+            modelBuilder.Entity<UsuarioEN>().HasKey(s => s.Id);
            
 
       
 
-            modelBuilder.Entity<Correlativo>().ToTable("correlativos");
-            modelBuilder.Entity<Correlativo>().HasKey(s => s.Id);
-            modelBuilder.Entity<Correlativo>()
+            modelBuilder.Entity<CorrelativoEN>().ToTable("correlativos");
+            modelBuilder.Entity<CorrelativoEN>().HasKey(s => s.Id);
+            modelBuilder.Entity<CorrelativoEN>()
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
           
