@@ -10,4 +10,8 @@
     <ProjectReference Include="..\CasaEscuela.BL.DTOs\CasaEscuela.BL.DTOs.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 </Project>
