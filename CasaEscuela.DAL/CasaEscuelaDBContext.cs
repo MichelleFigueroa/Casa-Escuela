@@ -94,14 +94,14 @@ namespace CasaEscuela.DAL
                 .WithOne(e => e.Anamnesis)
                 .HasForeignKey<AnamnesisEN>(a => a.IdEstudiante);
 
-            modelBuilder.Entity<EstudianteFamiliarEN>().ToTable("estudiante_familiares");
+            modelBuilder.Entity<EstudianteFamiliarEN>().ToTable("estudiantefamiliares");
             modelBuilder.Entity<EstudianteFamiliarEN>().HasKey(ef => ef.IdFamiliar);
             modelBuilder.Entity<EstudianteFamiliarEN>()
                 .HasOne(ef => ef.Estudiante)
                 .WithMany(e => e.Familiares)
                 .HasForeignKey(ef => ef.IdEstudiante);
 
-            modelBuilder.Entity<EstudiantePreceptoriaEN>().ToTable("estudiante_preceptorias");
+            modelBuilder.Entity<EstudiantePreceptoriaEN>().ToTable("estudiantepreceptorias");
             modelBuilder.Entity<EstudiantePreceptoriaEN>().HasKey(ep => ep.Id);
             modelBuilder.Entity<EstudiantePreceptoriaEN>()
                 .HasOne(ep => ep.Estudiante)

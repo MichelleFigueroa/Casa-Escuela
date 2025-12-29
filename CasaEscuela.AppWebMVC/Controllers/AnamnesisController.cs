@@ -21,6 +21,12 @@ namespace CasaEscuela.AppWebMVC.Controllers
             _preceptoriaBL = preceptoriaBL;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var estudiantes = await _anamnesisBL.ObtenerEstudiantesConAnamnesisAsync();
+            return View(estudiantes);
+        }
+
         public async Task<IActionResult> Create(int? idEstudiante)
         {
             await CargarCatalogos();
@@ -31,8 +37,6 @@ namespace CasaEscuela.AppWebMVC.Controllers
 
             if (idEstudiante.HasValue)
             {
-                // Si ya existe el estudiante, podr├¡amos cargar sus datos.
-                // Sin embargo, el requerimiento se enfoca en el registro inicial.
                 model.Estudiante.IdEstudiante = idEstudiante.Value;
                 model.Anamnesis.IdEstudiante = idEstudiante.Value;
             }
@@ -44,8 +48,7 @@ namespace CasaEscuela.AppWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AnamnesisRegistroDTO model)
         {
-            if (ModelState.IsValid)
-            {
+            
                 try
                 {
                     int idEstudiante = await _anamnesisBL.CrearAnamnesisAsync(model.Estudiante, model.Familiares, model.Anamnesis);
@@ -55,7 +58,7 @@ namespace CasaEscuela.AppWebMVC.Controllers
                 {
                     ModelState.AddModelError("", "Error al guardar la anamnesis: " + ex.Message);
                 }
-            }
+            
 
             await CargarCatalogos();
             return View(model);
@@ -63,22 +66,13 @@ namespace CasaEscuela.AppWebMVC.Controllers
 
         public async Task<IActionResult> Expediente(int idEstudiante)
         {
-            // Aqu├¡ deber├¡amos cargar todos los datos del estudiante para mostrar el expediente.
-            // Dado que no tenemos un IEstudianteBL completo con ObtenerPorId detallado que incluya todo,
-            // podr├¡amos necesitar extender las interfaces o usar lo que tenemos.
-            
-            // Para fines de este ejercicio, pasaremos el id y la vista se encargar├í de mostrar lo necesario
-            // o asumiremos que tenemos un m├odotodo en IAnamnesisBL para obtener el expediente.
-            
-            ViewBag.IdEstudiante = idEstudiante;
+            var registro = await _anamnesisBL.ObtenerAnamnesisRegistroPorIdEstudianteAsync(idEstudiante);
+            if (registro == null) return NotFound();
+
             var preceptorias = await _preceptoriaBL.ObtenerPreceptoriasPorEstudianteAsync(idEstudiante);
             ViewBag.Preceptorias = preceptorias;
             
-            // Tambi├on necesitaremos los datos de la anamnesis
-            var anamnesis = await _anamnesisBL.ObtenerAnamnesisPorIdEstudianteAsync(idEstudiante);
-            ViewBag.Anamnesis = anamnesis;
-
-            return View();
+            return View(registro);
         }
 
         private async Task CargarCatalogos()

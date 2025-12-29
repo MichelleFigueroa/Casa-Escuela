@@ -11,5 +11,6 @@ namespace CasaEscuela.BL.Interfaces
         Task<int> GuardarPreceptoriaAsync(EstudiantePreceptoriaMantDTO preceptoria);
         Task<List<EstudiantePreceptoriaMantDTO>> ObtenerPreceptoriasPorEstudianteAsync(int idEstudiante);
         Task<EstudiantePreceptoriaMantDTO> ObtenerPreceptoriaPorIdAsync(int id);
+        Task<List<EstudiantePreceptoriaMantDTO>> ObtenerTodasAsync();
     }
 }

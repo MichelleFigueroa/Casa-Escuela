@@ -17,11 +17,19 @@ namespace CasaEscuela.AppWebMVC.Controllers
             _catalogoBL = catalogoBL;
         }
 
-        public async Task<IActionResult> Index(int idEstudiante)
+        public async Task<IActionResult> Index(int idEstudiante = 0)
         {
             ViewBag.IdEstudiante = idEstudiante;
-            var list = await _preceptoriaBL.ObtenerPreceptoriasPorEstudianteAsync(idEstudiante);
-            return View(list);
+            if (idEstudiante > 0)
+            {
+                var list = await _preceptoriaBL.ObtenerPreceptoriasPorEstudianteAsync(idEstudiante);
+                return View(list);
+            }
+            else
+            {
+                var list = await _preceptoriaBL.ObtenerTodasAsync();
+                return View(list);
+            }
         }
 
         public async Task<IActionResult> Create(int idEstudiante)
@@ -56,6 +64,15 @@ namespace CasaEscuela.AppWebMVC.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var model = await _preceptoriaBL.ObtenerPreceptoriaPorIdAsync(id);
+            if (model == null) return NotFound();
+
+            // We might want to pass the student name or other info if not in the DTO
+            return View(model);
+        }
+
         public async Task<IActionResult> Edit(int id)
         {
             var model = await _preceptoriaBL.ObtenerPreceptoriaPorIdAsync(id);
@@ -69,8 +86,7 @@ namespace CasaEscuela.AppWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EstudiantePreceptoriaMantDTO model)
         {
-            if (ModelState.IsValid)
-            {
+           
                 try
                 {
                     await _preceptoriaBL.GuardarPreceptoriaAsync(model);
@@ -80,7 +96,7 @@ namespace CasaEscuela.AppWebMVC.Controllers
                 {
                     ModelState.AddModelError("", "Error al actualizar la preceptor├¡a: " + ex.Message);
                 }
-            }
+            
 
             await CargarCatalogos();
             return View(model);

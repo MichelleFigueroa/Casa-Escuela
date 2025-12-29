@@ -1,87 +1,183 @@
-@model dynamic
+@model CasaEscuela.BL.DTOs.AnamnesisRegistroDTO
 @{
     ViewData["Title"] = "Expediente del Estudiante";
-    var anamnesis = ViewBag.Anamnesis as CasaEscuela.BL.DTOs.AnamnesisMantDTO;
     var preceptorias = ViewBag.Preceptorias as List<CasaEscuela.BL.DTOs.EstudianteDTOs.EstudiantePreceptoriaMantDTO>;
-    int idEstudiante = ViewBag.IdEstudiante;
+    var student = Model.Estudiante;
+    var anamnesis = Model.Anamnesis;
+    var familia = Model.Familiares;
 }
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-primary mb-0">Expediente Integral</h2>
+        <div>
+            <h2 class="fw-bold text-primary mb-0">Expediente Integral</h2>
+            <p class="text-muted mb-0">@student.Nombres @student.Apellidos (@student.Codigo)</p>
+        </div>
         <div class="d-flex gap-2">
-            <a href="@Url.Action("Create", "Preceptoria", new { idEstudiante = idEstudiante })" class="btn btn-success shadow-sm rounded">
-                <i class="ti ti-plus me-1"></i>Nueva Preceptor├¡a
+            <a href="@Url.Action("Create", "Preceptoria", new { idEstudiante = student.IdEstudiante })" class="btn btn-success shadow-sm rounded">
+                <i class="ti ti-plus me-1"></i>Nueva Preceptoría
             </a>
-            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary shadow-sm rounded">
-                Volver
+            <a href="@Url.Action("Index", "Anamnesis")" class="btn btn-outline-secondary shadow-sm rounded">
+                Volver al Listado
             </a>
         </div>
     </div>
 
     <div class="accordion shadow-sm rounded" id="expedienteAccordion">
         
-        <!-- 🧑‍🎓 Informaci├│n del Estudiante -->
-        <div class="accordion-item border-0 mb-2 shadow-sm rounded">
+        <!-- 🧑‍🎓 Información del Estudiante -->
+        <div class="accordion-item border-0 mb-3 shadow-sm rounded">
             <h2 class="accordion-header" id="headingEstudiante">
-                <button class="accordion-button fw-bold text-primary bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEstudiante" aria-expanded="true" aria-controls="collapseEstudiante">
-                    <i class="ti ti-user me-2"></i>Informaci├│n General del Estudiante
+                <button class="accordion-button fw-bold text-primary bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEstudiante" aria-expanded="true" aria-controls="collapseEstudiante">
+                    <i class="ti ti-user-circle me-2 fs-4"></i>Información General del Estudiante
                 </button>
             </h2>
             <div id="collapseEstudiante" class="accordion-collapse collapse show" aria-labelledby="headingEstudiante" data-bs-parent="#expedienteAccordion">
                 <div class="accordion-body bg-white">
-                    <p class="text-muted small">Carga de datos generales aqu├¡ (C├│digo, Nivel, Grado, etc.)</p>
-                    <!-- Nota: Aqu├¡ podr├¡amos mostrar los datos que vienen en la anamnesis si se cargaron -->
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <label class="small text-muted d-block text-uppercase fw-bold">Código</label>
+                            <span class="fs-6 fw-bold">@student.Codigo</span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small text-muted d-block text-uppercase fw-bold">Nombres</label>
+                            <span class="fs-6">@student.Nombres</span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small text-muted d-block text-uppercase fw-bold">Apellidos</label>
+                            <span class="fs-6">@student.Apellidos</span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small text-muted d-block text-uppercase fw-bold">Fecha Nacimiento</label>
+                            <span class="fs-6">@(student.FechaNacimiento?.ToString("dd/MM/yyyy") ?? "-")</span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small text-muted d-block text-uppercase fw-bold">Grado y Sección</label>
+                            <span class="fs-6">@student.Grado @student.Seccion</span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small text-muted d-block text-uppercase fw-bold">Jornada</label>
+                            <span class="fs-6">@student.Jornada</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- 🧠 Resumen de Anamnesis -->
-        <div class="accordion-item border-0 mb-2 shadow-sm rounded">
+        <!-- 👨‍👩‍👧‍👦 Composición Familiar -->
+        <div class="accordion-item border-0 mb-3 shadow-sm rounded">
+            <h2 class="accordion-header" id="headingFamilia">
+                <button class="accordion-button collapsed fw-bold text-primary bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFamilia" aria-expanded="false" aria-controls="collapseFamilia">
+                    <i class="ti ti-users me-2 fs-4"></i>Composición Familiar
+                </button>
+            </h2>
+            <div id="collapseFamilia" class="accordion-collapse collapse" aria-labelledby="headingFamilia" data-bs-parent="#expedienteAccordion">
+                <div class="accordion-body bg-white">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover align-middle">
+                            <thead class="table-light small text-uppercase">
+                                <tr>
+                                    <th>Nombre Completo</th>
+                                    <th>Parentesco</th>
+                                    <th>Edad</th>
+                                    <th>Ocupación</th>
+                                    <th>¿Vive con estudiante?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (familia != null && familia.Any())
+                                {
+                                    @foreach (var f in familia)
+                                    {
+                                        <tr>
+                                            <td>@f.Nombres @f.Apellidos</td>
+                                            <td><span class="badge bg-light text-dark border">@f.TipoParentesco</span></td>
+                                            <td>@f.Edad años</td>
+                                            <td>@f.Ocupacion</td>
+                                            <td>
+                                                @if (f.ViveConEstudiante)
+                                                {
+                                                    <span class="text-success"><i class="ti ti-check me-1"></i>Sí</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted"><i class="ti ti-x me-1"></i>No</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-3">No se registraron familiares.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🧠 Datos de la Anamnesis -->
+        <div class="accordion-item border-0 mb-3 shadow-sm rounded">
             <h2 class="accordion-header" id="headingAnamnesis">
-                <button class="accordion-button collapsed fw-bold text-primary bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAnamnesis" aria-expanded="false" aria-controls="collapseAnamnesis">
-                    <i class="ti ti-clipboard me-2"></i>Resumen de Anamnesis
+                <button class="accordion-button collapsed fw-bold text-primary bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAnamnesis" aria-expanded="false" aria-controls="collapseAnamnesis">
+                    <i class="ti ti-notes me-2 fs-4"></i>Datos de la Anamnesis
                 </button>
             </h2>
             <div id="collapseAnamnesis" class="accordion-collapse collapse" aria-labelledby="headingAnamnesis" data-bs-parent="#expedienteAccordion">
                 <div class="accordion-body bg-white">
-                    @if (anamnesis != null)
+                    @if (anamnesis != null && anamnesis.IdAnamnesis > 0)
                     {
-                        <div class="row g-3">
-                            <div class="col-12 col-md-4">
-                                <span class="fw-bold d-block">Entrevistador:</span>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <label class="small text-muted d-block text-uppercase fw-bold">Entrevistador</label>
                                 <span>@anamnesis.Entrevistador</span>
                             </div>
-                            <div class="col-12 col-md-4">
-                                <span class="fw-bold d-block">Fecha:</span>
-                                <span>@(anamnesis.FechaEntrevista?.ToString("dd/MM/yyyy") ?? "N/A")</span>
+                            <div class="col-md-4">
+                                <label class="small text-muted d-block text-uppercase fw-bold">Fecha Entrevista</label>
+                                <span>@(anamnesis.FechaEntrevista?.ToString("dd/MM/yyyy") ?? "-")</span>
                             </div>
                             <div class="col-12">
-                                <hr class="text-muted opacity-25">
+                                <hr class="my-2 opacity-25">
                             </div>
-                            <div class="col-12 col-md-6">
-                                <span class="fw-bold d-block">Condiciones de Salud:</span>
-                                <p class="text-muted">@anamnesis.CondicionesSalud</p>
+                            <div class="col-md-6">
+                                <label class="small text-muted d-block text-uppercase fw-bold">Condiciones de Salud</label>
+                                <p class="text-dark">@(string.IsNullOrWhiteSpace(anamnesis.CondicionesSalud) ? "Sin datos" : anamnesis.CondicionesSalud)</p>
                             </div>
-                            <div class="col-12 col-md-6">
-                                <span class="fw-bold d-block">Situaci├│n Familiar:</span>
-                                <p class="text-muted">@anamnesis.SituacionFamiliar</p>
+                            <div class="col-md-6">
+                                <label class="small text-muted d-block text-uppercase fw-bold">Desarrollo Motor</label>
+                                <p class="text-dark">@(string.IsNullOrWhiteSpace(anamnesis.DesarrolloMotor) ? "Sin datos" : anamnesis.DesarrolloMotor)</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-muted d-block text-uppercase fw-bold">Desarrollo Lenguaje</label>
+                                <p class="text-dark">@(string.IsNullOrWhiteSpace(anamnesis.DesarrolloLenguaje) ? "Sin datos" : anamnesis.DesarrolloLenguaje)</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-muted d-block text-uppercase fw-bold">Situación Familiar</label>
+                                <p class="text-dark">@(string.IsNullOrWhiteSpace(anamnesis.SituacionFamiliar) ? "Sin datos" : anamnesis.SituacionFamiliar)</p>
+                            </div>
+                            <div class="col-12">
+                                <label class="small text-muted d-block text-uppercase fw-bold">Observaciones Generales</label>
+                                <p class="text-dark">@(string.IsNullOrWhiteSpace(anamnesis.Observaciones) ? "Sin observaciones" : anamnesis.Observaciones)</p>
                             </div>
                         </div>
                     }
                     else
                     {
-                        <p class="text-center text-muted">No hay anamnesis registrada.</p>
+                        <p class="text-center text-muted py-3">No hay anamnesis registrada para este estudiante.</p>
                     }
                 </div>
             </div>
         </div>
 
-        <!-- 📋 Historial de Preceptor├¡as -->
-        <div class="accordion-item border-0 mb-2 shadow-sm rounded">
+        <!-- 📋 Historial de Preceptorías -->
+        <div class="accordion-item border-0 mb-3 shadow-sm rounded">
             <h2 class="accordion-header" id="headingPreceptorias">
-                <button class="accordion-button collapsed fw-bold text-primary bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePreceptorias" aria-expanded="false" aria-controls="collapsePreceptorias">
-                    <i class="ti ti-list me-2"></i>Historial de Preceptor├¡as
+                <button class="accordion-button collapsed fw-bold text-primary bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePreceptorias" aria-expanded="false" aria-controls="collapsePreceptorias">
+                    <i class="ti ti-history me-2 fs-4"></i>Historial de Preceptorías
                 </button>
             </h2>
             <div id="collapsePreceptorias" class="accordion-collapse collapse" aria-labelledby="headingPreceptorias" data-bs-parent="#expedienteAccordion">
@@ -91,23 +187,35 @@
                         {
                             @foreach (var p in preceptorias)
                             {
-                                <div class="list-group-item py-3 border-0 border-bottom">
-                                    <div class="d-flex w-100 justify-content-between align-items-center">
-                                        <h6 class="mb-1 fw-bold">Fecha: @p.Fecha.ToString("dd/MM/yyyy")</h6>
-                                        <span class="badge @(p.EstadoPreceptoria == 3 ? "bg-dark" : "bg-success") rounded-pill">
+                                <div class="list-group-item py-4 border-0 border-bottom">
+                                    <div class="d-flex w-100 justify-content-between align-items-center mb-2">
+                                        <h6 class="mb-0 fw-bold fs-5">Sesión del @p.Fecha.ToString("dd/MM/yyyy")</h6>
+                                        <span class="badge @(p.EstadoPreceptoria == 3 ? "bg-dark" : p.EstadoPreceptoria == 2 ? "bg-warning text-dark" : "bg-success") rounded-pill px-3">
                                             @(p.EstadoPreceptoria == 1 ? "Abierta" : p.EstadoPreceptoria == 2 ? "Seguimiento" : "Cerrada")
                                         </span>
                                     </div>
-                                    <p class="mb-1 text-muted">@p.ProcesosTrabajados</p>
-                                    <small class="text-primary">
-                                        <a href="@Url.Action("Edit", "Preceptoria", new { id = p.Id })" class="text-decoration-none">Ver Detalles</a>
-                                    </small>
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <p class="mb-2"><strong>Temas trabajados:</strong> @p.ProcesosTrabajados</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-2 small text-muted"><strong>Metas:</strong> @p.MetasSiguientes</p>
+                                        </div>
+                                        <div class="col-md-6 text-end">
+                                            <a href="@Url.Action("Details", "Preceptoria", new { id = p.Id })" class="btn btn-sm btn-outline-primary rounded">
+                                                <i class="ti ti-arrow-right me-1"></i>Detalles Completos
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             }
                         }
                         else
                         {
-                            <p class="text-center text-muted py-3">No hay preceptor├¡as registradas.</p>
+                            <div class="text-center py-4">
+                                <i class="ti ti-checkbox fs-1 text-muted d-block mb-2"></i>
+                                <p class="text-muted">No hay preceptorías registradas para este estudiante.</p>
+                            </div>
                         }
                     </div>
                 </div>

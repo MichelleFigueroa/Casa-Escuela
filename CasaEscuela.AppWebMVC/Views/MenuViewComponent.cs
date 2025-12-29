@@ -59,8 +59,8 @@ namespace CasaEscuela.AppWebMVC.Views
                     {
                         new SubMenuDTO
                         {
-                            Nombre = "Expediente del Estudiante",
-                            Url = Url.Action("Index","Expediente"),
+                            Nombre = "Gestión de Expedientes",
+                            Url = Url.Action("Index","Anamnesis"),
                             Permiso = "MENU_EXPEDIENTE_GENERAL",
                             Icono = "fas fa-file-medical me-2"
                         },

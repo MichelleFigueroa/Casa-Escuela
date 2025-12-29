@@ -105,5 +105,28 @@ namespace CasaEscuela.DAL
                 FechaActualizacion = p.FechaActualizacion
             };
         }
+
+        public async Task<List<EstudiantePreceptoriaMantDTO>> ObtenerTodasAsync()
+        {
+            var preceptorias = await dbContext.EstudiantePreceptorias
+                .Include(p => p.Estudiante)
+                .OrderByDescending(p => p.Fecha)
+                .ToListAsync();
+
+            return preceptorias.Select(p => new EstudiantePreceptoriaMantDTO
+            {
+                Id = p.Id,
+                IdEstudiante = p.IdEstudiante,
+                TipoPreceptoriaId = p.TipoPreceptoriaId,
+                Fecha = p.Fecha,
+                ProcesosTrabajados = p.ProcesosTrabajados,
+                ProcesosDificultad = p.ProcesosDificultad,
+                MetasSiguientes = p.MetasSiguientes,
+                Recomendaciones = p.Recomendaciones,
+                EstadoPreceptoria = (byte)p.EstadoPreceptoria,
+                FechaCreacion = p.FechaCreacion,
+                FechaActualizacion = p.FechaActualizacion
+            }).ToList();
+        }
     }
 }

@@ -12,19 +12,23 @@
                 <i class="ti ti-history me-2"></i>@ViewData["Title"]
             </h4>
             <div class="d-flex gap-2">
-                <a href="@Url.Action("Create", "Preceptoria", new { idEstudiante = idEstudiante })" class="btn btn-success rounded shadow-sm">
-                    <i class="ti ti-plus me-1"></i>Nueva Preceptor├¡a
-                </a>
-                <a href="@Url.Action("Expediente", "Anamnesis", new { idEstudiante = idEstudiante })" class="btn btn-outline-secondary rounded shadow-sm">
-                    Ver Expediente
-                </a>
+                @if (idEstudiante > 0)
+                {
+                    <a href="@Url.Action("Create", "Preceptoria", new { idEstudiante = idEstudiante })" class="btn btn-success rounded shadow-sm">
+                        <i class="ti ti-plus me-1"></i>Nueva Preceptor├¡a
+                    </a>
+                    <a href="@Url.Action("Expediente", "Anamnesis", new { idEstudiante = idEstudiante })" class="btn btn-outline-secondary rounded shadow-sm">
+                        Ver Expediente
+                    </a>
+                }
             </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle" id="preceptoriaIndexTable">
                     <thead class="table-light text-muted small text-uppercase fw-bold">
                         <tr>
+                            <th>Estudiante</th>
                             <th>Fecha</th>
                             <th>Estado</th>
                             <th>Resumen</th>
@@ -37,6 +41,11 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                    <td class="small">
+                                        <a href="@Url.Action("Expediente", "Anamnesis", new { idEstudiante = item.IdEstudiante })" class="text-decoration-none fw-bold">
+                                            <i class="ti ti-user me-1"></i> Ver Estudiante
+                                        </a>
+                                    </td>
                                     <td class="fw-bold text-dark">
                                         @item.Fecha.ToString("dd/MM/yyyy")
                                     </td>
@@ -54,6 +63,11 @@
                                                 <i class="ti ti-dots-vertical"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded">
+                                                <li>
+                                                    <a class="dropdown-item" href="@Url.Action("Details", "Preceptoria", new { id = item.Id })">
+                                                        <i class="ti ti-file-text me-2 text-info"></i>Ver Detalles
+                                                    </a>
+                                                </li>
                                                 <li>
                                                     <a class="dropdown-item" href="@Url.Action("Edit", "Preceptoria", new { id = item.Id })">
                                                         <i class="ti ti-edit me-2 text-primary"></i>Editar

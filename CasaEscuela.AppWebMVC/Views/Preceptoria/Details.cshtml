@@ -1,0 +1,79 @@
+@model CasaEscuela.BL.DTOs.EstudianteDTOs.EstudiantePreceptoriaMantDTO
+
+@{
+    ViewData["Title"] = "Detalles de Preceptoría";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary mb-0"><i class="ti ti-file-text me-2"></i>Detalles de Sesión</h2>
+            <p class="text-muted mb-0">Sesión del @Model.Fecha.ToString("dd MMMM yyyy")</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="@Url.Action("Edit", "Preceptoria", new { id = Model.Id })" class="btn btn-primary shadow-sm rounded">
+                <i class="ti ti-edit me-1"></i>Editar
+            </a>
+            <a href="@Url.Action("Expediente", "Anamnesis", new { idEstudiante = Model.IdEstudiante })" class="btn btn-outline-secondary shadow-sm rounded">
+                Volver al Expediente
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- 📄 Resumen y Estado -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-4">Información de Sesión</h5>
+                    
+                    <div class="mb-4">
+                        <label class="small text-muted d-block text-uppercase fw-bold mb-1">Estado</label>
+                        <span class="badge @(Model.EstadoPreceptoria == 3 ? "bg-dark" : Model.EstadoPreceptoria == 2 ? "bg-warning text-dark" : "bg-success") rounded-pill px-3 fs-6">
+                            @(Model.EstadoPreceptoria == 1 ? "Abierta" : Model.EstadoPreceptoria == 2 ? "Seguimiento" : "Cerrada")
+                        </span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="small text-muted d-block text-uppercase fw-bold mb-1">Fecha de Sesión</label>
+                        <span class="fs-5 fw-bold">@Model.Fecha.ToString("dd/MM/yyyy")</span>
+                    </div>
+
+                    <div class="mb-0">
+                        <label class="small text-muted d-block text-uppercase fw-bold mb-1">Registrado el</label>
+                        <span class="text-muted italic">@Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 📝 Detalles de la Intervención -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-4">Notas de la Sesión</h5>
+                    
+                    <div class="mb-4 p-3 bg-light rounded">
+                        <label class="small text-primary d-block text-uppercase fw-bold mb-2">Procesos Trabajados</label>
+                        <p class="mb-0 text-dark" style="white-space: pre-wrap;">@Model.ProcesosTrabajados</p>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-light rounded border-start border-danger border-4">
+                        <label class="small text-danger d-block text-uppercase fw-bold mb-2">Dificultades Encontradas</label>
+                        <p class="mb-0 text-dark" style="white-space: pre-wrap;">@(string.IsNullOrWhiteSpace(Model.ProcesosDificultad) ? "Ninguna reportada." : Model.ProcesosDificultad)</p>
+                    </div>
+
+                    <div class="mb-4 p-3 bg-light rounded border-start border-success border-4">
+                        <label class="small text-success d-block text-uppercase fw-bold mb-2">Metas para la Siguiente Sesión</label>
+                        <p class="mb-0 text-dark" style="white-space: pre-wrap;">@Model.MetasSiguientes</p>
+                    </div>
+
+                    <div class="p-3 bg-light rounded border-start border-info border-4">
+                        <label class="small text-info d-block text-uppercase fw-bold mb-2">Recomendaciones / Sugerencias</label>
+                        <p class="mb-0 text-dark" style="white-space: pre-wrap;">@Model.Recomendaciones</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

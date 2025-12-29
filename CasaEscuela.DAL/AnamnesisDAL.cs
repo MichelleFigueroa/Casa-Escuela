@@ -24,7 +24,6 @@ namespace CasaEscuela.DAL
             using var transaction = await dbContext.Database.BeginTransactionAsync();
             try
             {
-                // 1. Guardar o Actualizar Estudiante
                 EstudianteEN estudianteEN;
                 
                 if (pEstudiante.IdEstudiante > 0)
@@ -37,7 +36,7 @@ namespace CasaEscuela.DAL
                     estudianteEN.Nombres = pEstudiante.Nombres;
                     estudianteEN.Apellidos = pEstudiante.Apellidos;
                     estudianteEN.FechaNacimiento = pEstudiante.FechaNacimiento;
-                    estudianteEN.Sexo = (SexoEnum)pEstudiante.Sexo; // Asumiendo Enum
+                    estudianteEN.Sexo = (SexoEnum)pEstudiante.Sexo; 
                     estudianteEN.NivelEscolarId = pEstudiante.NivelEscolarId;
                     estudianteEN.Grado = pEstudiante.Grado;
                     estudianteEN.Seccion = pEstudiante.Seccion;
@@ -70,21 +69,14 @@ namespace CasaEscuela.DAL
                 // 2. Guardar Familiares
                 if (pFamiliares != null && pFamiliares.Any())
                 {
-                    // Si es edición, podríamos borrar los anteriores o actualizar. 
-                    // El requerimiento dice "Registro y consulta". Asumiremos adición de nuevos o reemplazo?
-                    // "Registro de familiares". Probablemente se añadan.
-                    // Pero si es "Crear Anamnesis", suele ser un proceso inicial.
-                    // Si ya existen, tal vez no duplicar?
-                    // Para simplificar y cumplir con "Una sola pantalla", si hay familiares en la lista, los agregamos/actualizamos.
-                    // Si asumimos que vienen todos los actuales, podríamos borrar y reinsertar o hacer merge.
-                    // Dado el alcance, vamos a insertar los nuevos.
+                    
                     
                     foreach (var fam in pFamiliares)
                     {
                         var familiarEN = new EstudianteFamiliarEN
                         {
                             IdEstudiante = idEstudiante,
-                            TipoParentesco = (TipoParentescoEnum)fam.TipoParentesco, // Asumiendo Enum en DTO es compatible o int
+                            TipoParentesco = (TipoParentescoEnum)fam.TipoParentesco, 
                             Nombres = fam.Nombres,
                             Apellidos = fam.Apellidos,
                             Edad = fam.Edad,
@@ -152,6 +144,82 @@ namespace CasaEscuela.DAL
                 Observaciones = anamnesis.Observaciones,
                 FechaEntrevista = anamnesis.FechaEntrevista,
                 Entrevistador = anamnesis.Entrevistador
+            };
+        }
+
+        public async Task<List<EstudianteMantDTO>> ObtenerEstudiantesConAnamnesisAsync()
+        {
+            var list = await dbContext.Anamnesis
+                .Include(a => a.Estudiante)
+                .Select(a => new EstudianteMantDTO
+                {
+                    IdEstudiante = a.Estudiante.IdEstudiante,
+                    Codigo = a.Estudiante.Codigo,
+                    Nombres = a.Estudiante.Nombres,
+                    Apellidos = a.Estudiante.Apellidos,
+                    FechaNacimiento = a.Estudiante.FechaNacimiento,
+                    Grado = a.Estudiante.Grado,
+                    Seccion = a.Estudiante.Seccion
+                })
+                .ToListAsync();
+
+            return list;
+        }
+
+        public async Task<AnamnesisRegistroDTO> ObtenerAnamnesisRegistroPorIdEstudianteAsync(int idEstudiante)
+        {
+            var estudiante = await dbContext.Estudiantes
+                .Include(e => e.Familiares)
+                .Include(e => e.Anamnesis)
+                .FirstOrDefaultAsync(e => e.IdEstudiante == idEstudiante);
+
+            if (estudiante == null) return null;
+
+            return new AnamnesisRegistroDTO
+            {
+                Estudiante = new EstudianteMantDTO
+                {
+                    IdEstudiante = estudiante.IdEstudiante,
+                    Codigo = estudiante.Codigo,
+                    Nombres = estudiante.Nombres,
+                    Apellidos = estudiante.Apellidos,
+                    FechaNacimiento = estudiante.FechaNacimiento,
+                    Sexo = (byte)estudiante.Sexo,
+                    NivelEscolarId = estudiante.NivelEscolarId,
+                    Grado = estudiante.Grado,
+                    Seccion = estudiante.Seccion,
+                    Jornada = estudiante.Jornada
+                },
+                Familiares = estudiante.Familiares.Select(f => new EstudianteFamiliarMantDTO
+                {
+                    IdFamiliar = f.IdFamiliar,
+                    IdEstudiante = f.IdEstudiante,
+                    TipoParentesco = (byte)f.TipoParentesco,
+                    Nombres = f.Nombres,
+                    Apellidos = f.Apellidos,
+                    Edad = f.Edad,
+                    Escolaridad = f.Escolaridad,
+                    Ocupacion = f.Ocupacion,
+                    ViveConEstudiante = f.ViveConEstudiante,
+                    Telefono = f.Telefono
+                }).ToList(),
+                Anamnesis = estudiante.Anamnesis != null ? new AnamnesisMantDTO
+                {
+                    IdAnamnesis = estudiante.Anamnesis.IdAnamnesis,
+                    IdEstudiante = estudiante.Anamnesis.IdEstudiante,
+                    ViveConId = estudiante.Anamnesis.ViveConId,
+                    TipoFamiliaId = estudiante.Anamnesis.TipoFamiliaId,
+                    TipoPartoId = estudiante.Anamnesis.TipoPartoId,
+                    EmbarazoControlado = estudiante.Anamnesis.EmbarazoControlado,
+                    ComplicacionesEmbarazo = estudiante.Anamnesis.ComplicacionesEmbarazo,
+                    CondicionesSalud = estudiante.Anamnesis.CondicionesSalud,
+                    DesarrolloLenguaje = estudiante.Anamnesis.DesarrolloLenguaje,
+                    DesarrolloMotor = estudiante.Anamnesis.DesarrolloMotor,
+                    SituacionFamiliar = estudiante.Anamnesis.SituacionFamiliar,
+                    Observaciones = estudiante.Anamnesis.Observaciones,
+                    FechaEntrevista = estudiante.Anamnesis.FechaEntrevista,
+                    Entrevistador = estudiante.Anamnesis.Entrevistador
+                } : new AnamnesisMantDTO()
             };
         }
     }

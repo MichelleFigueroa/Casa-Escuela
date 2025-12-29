@@ -1,0 +1,87 @@
+@model IEnumerable<CasaEscuela.BL.DTOs.EstudianteDTOs.EstudianteMantDTO>
+
+@{
+    ViewData["Title"] = "Listado de Anamnesis";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0 rounded">
+        <div class="card-header bg-white border-bottom-0 py-3 d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold mb-0 text-primary">
+                <i class="ti ti-clipboard me-2"></i>@ViewData["Title"]
+            </h4>
+            <a href="@Url.Action("Create", "Anamnesis")" class="btn btn-primary rounded shadow-sm">
+                <i class="ti ti-plus me-1"></i>Nueva Anamnesis
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="anamnesisIndexTable">
+                    <thead class="table-light text-muted small text-uppercase fw-bold">
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Grado/Sección</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-dark">@item.Codigo</td>
+                                    <td>@item.Nombres</td>
+                                    <td>@item.Apellidos</td>
+                                    <td>
+                                        <span class="badge bg-light text-dark border">
+                                            @item.Grado @item.Seccion
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <a href="@Url.Action("Expediente", "Anamnesis", new { idEstudiante = item.IdEstudiante })" 
+                                               class="btn btn-sm btn-outline-info rounded shadow-sm" title="Ver Expediente">
+                                                <i class="ti ti-file-description"></i> Expediente
+                                            </a>
+                                            <a href="@Url.Action("Create", "Anamnesis", new { idEstudiante = item.IdEstudiante })" 
+                                               class="btn btn-sm btn-outline-primary rounded shadow-sm" title="Editar Anamnesis">
+                                                <i class="ti ti-edit"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-5">
+                                    <i class="ti ti-info-circle fs-2 d-block mb-2"></i>
+                                    No hay registros de anamnesis.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#anamnesisIndexTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                },
+                "pageLength": 10,
+                "ordering": true,
+                "responsive": true
+            });
+        });
+    </script>
+}
