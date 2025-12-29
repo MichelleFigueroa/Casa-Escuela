@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CasaEscuela.EN
+namespace CasaEscuela.EN.CatologosEN
 {
-    public class SaludEN
+    public class CatTipoPartoEN
     {
         public int Id { get; set; }
+        public string Descripcion { get; set; }
 
+        public List<AnamnesisEN> Anamnesis { get; set; }
 
-        public string descripcion {  get; set; }
-
-        public int IdEntrevista { get; set; }
     }
 }

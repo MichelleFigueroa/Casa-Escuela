@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CasaEscuela.EN.CatologosEN;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,17 +9,27 @@ namespace CasaEscuela.EN
 {
     public class EstudianteEN
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
-        
-        public DateTime fecha_nacimiento { get; set; }
+        public int IdEstudiante { get; set; }
+        public string Codigo { get; set; }
 
-        public int edad {  get; set; }
+        public string Nombres { get; set; }
+        public string Apellidos { get; set; }
+        public DateTime? FechaNacimiento { get; set; }
 
-        public string centro_escolar { get; set; }
+        public SexoEnum Sexo { get; set; }
 
-        public int grado { get; set; }
+        public int? NivelEscolarId { get; set; }
+        public string Grado { get; set; }
+        public string Seccion { get; set; }
+        public string Jornada { get; set; }
 
-        public Boolean estado { get; set; }
+        public bool Estado { get; set; }
+        public DateTime FechaRegistro { get; set; }
+
+        // Navegación
+        public CatNivelEscolarEN NivelEscolar { get; set; }
+        public AnamnesisEN Anamnesis { get; set; }
+        public List<EstudianteFamiliarEN> Familiares { get; set; }
+        public List<EstudiantePreceptoriaEN> Preceptorias { get; set; }
     }
 }
