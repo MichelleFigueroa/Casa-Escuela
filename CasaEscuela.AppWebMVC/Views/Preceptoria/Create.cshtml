@@ -1,0 +1,87 @@
+@model CasaEscuela.BL.DTOs.EstudianteDTOs.EstudiantePreceptoriaMantDTO
+
+@{
+    ViewData["Title"] = (Model.Id > 0 ? "Editar" : "Nueva") + " Preceptor├¡a";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="card shadow-sm border-0 rounded">
+                <div class="card-header bg-white border-bottom-0 py-3">
+                    <h4 class="fw-bold mb-0 text-success">
+                        <i class="ti ti-book me-2"></i>@ViewData["Title"]
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="@(Model.Id > 0 ? "Edit" : "Create")">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="IdEstudiante" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label asp-for="Fecha" class="form-label fw-bold"></label>
+                                <input asp-for="Fecha" type="date" class="form-control" required />
+                                <span asp-validation-for="Fecha" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label asp-for="TipoPreceptoriaId" class="form-label fw-bold"></label>
+                                <select asp-for="TipoPreceptoriaId" class="form-select" asp-items="ViewBag.TiposPreceptoria">
+                                    <option value="">Seleccione tipo...</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="ProcesosTrabajados" class="form-label fw-bold"></label>
+                                <textarea asp-for="ProcesosTrabajados" class="form-control" rows="3" placeholder="Detalle los procesos abordados..."></textarea>
+                                <span asp-validation-for="ProcesosTrabajados" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="ProcesosDificultad" class="form-label fw-bold"></label>
+                                <textarea asp-for="ProcesosDificultad" class="form-control" rows="3" placeholder="Aspectos con mayor dificultad..."></textarea>
+                                <span asp-validation-for="ProcesosDificultad" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label asp-for="MetasSiguientes" class="form-label fw-bold"></label>
+                                <textarea asp-for="MetasSiguientes" class="form-control" rows="3" placeholder="Metas para la pr├│xima sesi├│n..."></textarea>
+                                <span asp-validation-for="MetasSiguientes" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label asp-for="Recomendaciones" class="form-label fw-bold"></label>
+                                <textarea asp-for="Recomendaciones" class="form-control" rows="3" placeholder="Recomendaciones al estudiante/familia..."></textarea>
+                                <span asp-validation-for="Recomendaciones" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <label asp-for="EstadoPreceptoria" class="form-label fw-bold"></label>
+                                <select asp-for="EstadoPreceptoria" class="form-select" required>
+                                    <option value="1">Abierta</option>
+                                    <option value="2">En Seguimiento</option>
+                                    <option value="3">Cerrada</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column flex-md-row justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <a href="@Url.Action("Expediente", "Anamnesis", new { idEstudiante = Model.IdEstudiante })" class="btn btn-outline-secondary rounded shadow-sm px-4">
+                                Cancelar
+                            </a>
+                            <button type="reset" class="btn btn-light rounded shadow-sm px-4">
+                                Limpiar
+                            </button>
+                            <button type="submit" class="btn btn-success rounded shadow-sm px-4">
+                                Guardar Preceptor├¡a
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

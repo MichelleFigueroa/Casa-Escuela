@@ -1,0 +1,118 @@
+@model dynamic
+@{
+    ViewData["Title"] = "Expediente del Estudiante";
+    var anamnesis = ViewBag.Anamnesis as CasaEscuela.BL.DTOs.AnamnesisMantDTO;
+    var preceptorias = ViewBag.Preceptorias as List<CasaEscuela.BL.DTOs.EstudianteDTOs.EstudiantePreceptoriaMantDTO>;
+    int idEstudiante = ViewBag.IdEstudiante;
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary mb-0">Expediente Integral</h2>
+        <div class="d-flex gap-2">
+            <a href="@Url.Action("Create", "Preceptoria", new { idEstudiante = idEstudiante })" class="btn btn-success shadow-sm rounded">
+                <i class="ti ti-plus me-1"></i>Nueva Preceptor├¡a
+            </a>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary shadow-sm rounded">
+                Volver
+            </a>
+        </div>
+    </div>
+
+    <div class="accordion shadow-sm rounded" id="expedienteAccordion">
+        
+        <!-- 🧑‍🎓 Informaci├│n del Estudiante -->
+        <div class="accordion-item border-0 mb-2 shadow-sm rounded">
+            <h2 class="accordion-header" id="headingEstudiante">
+                <button class="accordion-button fw-bold text-primary bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEstudiante" aria-expanded="true" aria-controls="collapseEstudiante">
+                    <i class="ti ti-user me-2"></i>Informaci├│n General del Estudiante
+                </button>
+            </h2>
+            <div id="collapseEstudiante" class="accordion-collapse collapse show" aria-labelledby="headingEstudiante" data-bs-parent="#expedienteAccordion">
+                <div class="accordion-body bg-white">
+                    <p class="text-muted small">Carga de datos generales aqu├¡ (C├│digo, Nivel, Grado, etc.)</p>
+                    <!-- Nota: Aqu├¡ podr├¡amos mostrar los datos que vienen en la anamnesis si se cargaron -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 🧠 Resumen de Anamnesis -->
+        <div class="accordion-item border-0 mb-2 shadow-sm rounded">
+            <h2 class="accordion-header" id="headingAnamnesis">
+                <button class="accordion-button collapsed fw-bold text-primary bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAnamnesis" aria-expanded="false" aria-controls="collapseAnamnesis">
+                    <i class="ti ti-clipboard me-2"></i>Resumen de Anamnesis
+                </button>
+            </h2>
+            <div id="collapseAnamnesis" class="accordion-collapse collapse" aria-labelledby="headingAnamnesis" data-bs-parent="#expedienteAccordion">
+                <div class="accordion-body bg-white">
+                    @if (anamnesis != null)
+                    {
+                        <div class="row g-3">
+                            <div class="col-12 col-md-4">
+                                <span class="fw-bold d-block">Entrevistador:</span>
+                                <span>@anamnesis.Entrevistador</span>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <span class="fw-bold d-block">Fecha:</span>
+                                <span>@(anamnesis.FechaEntrevista?.ToString("dd/MM/yyyy") ?? "N/A")</span>
+                            </div>
+                            <div class="col-12">
+                                <hr class="text-muted opacity-25">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <span class="fw-bold d-block">Condiciones de Salud:</span>
+                                <p class="text-muted">@anamnesis.CondicionesSalud</p>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <span class="fw-bold d-block">Situaci├│n Familiar:</span>
+                                <p class="text-muted">@anamnesis.SituacionFamiliar</p>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted">No hay anamnesis registrada.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 📋 Historial de Preceptor├¡as -->
+        <div class="accordion-item border-0 mb-2 shadow-sm rounded">
+            <h2 class="accordion-header" id="headingPreceptorias">
+                <button class="accordion-button collapsed fw-bold text-primary bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePreceptorias" aria-expanded="false" aria-controls="collapsePreceptorias">
+                    <i class="ti ti-list me-2"></i>Historial de Preceptor├¡as
+                </button>
+            </h2>
+            <div id="collapsePreceptorias" class="accordion-collapse collapse" aria-labelledby="headingPreceptorias" data-bs-parent="#expedienteAccordion">
+                <div class="accordion-body bg-white">
+                    <div class="list-group list-group-flush">
+                        @if (preceptorias != null && preceptorias.Any())
+                        {
+                            @foreach (var p in preceptorias)
+                            {
+                                <div class="list-group-item py-3 border-0 border-bottom">
+                                    <div class="d-flex w-100 justify-content-between align-items-center">
+                                        <h6 class="mb-1 fw-bold">Fecha: @p.Fecha.ToString("dd/MM/yyyy")</h6>
+                                        <span class="badge @(p.EstadoPreceptoria == 3 ? "bg-dark" : "bg-success") rounded-pill">
+                                            @(p.EstadoPreceptoria == 1 ? "Abierta" : p.EstadoPreceptoria == 2 ? "Seguimiento" : "Cerrada")
+                                        </span>
+                                    </div>
+                                    <p class="mb-1 text-muted">@p.ProcesosTrabajados</p>
+                                    <small class="text-primary">
+                                        <a href="@Url.Action("Edit", "Preceptoria", new { id = p.Id })" class="text-decoration-none">Ver Detalles</a>
+                                    </small>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-center text-muted py-3">No hay preceptor├¡as registradas.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

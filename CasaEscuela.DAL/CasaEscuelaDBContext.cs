@@ -43,10 +43,10 @@ namespace CasaEscuela.DAL
         // CORE
         // ==========================
 
-        public DbSet<EstudianteEN> Estudiante { get; set; }
-        public DbSet<EstudianteFamiliarEN> EstudianteFamiliar { get; set; }
+        public DbSet<EstudianteEN> Estudiantes { get; set; }
+        public DbSet<EstudianteFamiliarEN> EstudianteFamiliares { get; set; }
         public DbSet<AnamnesisEN> Anamnesis { get; set; }
-        public DbSet<EstudiantePreceptoriaEN> EstudiantePreceptoria { get; set; }
+        public DbSet<EstudiantePreceptoriaEN> EstudiantePreceptorias { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -82,6 +82,31 @@ namespace CasaEscuela.DAL
             modelBuilder.Entity<CorrelativoEN>()
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
+          
+            // Configuración Estudiante y relacionados
+            modelBuilder.Entity<EstudianteEN>().ToTable("estudiantes");
+            modelBuilder.Entity<EstudianteEN>().HasKey(e => e.IdEstudiante);
+
+            modelBuilder.Entity<AnamnesisEN>().ToTable("anamnesis");
+            modelBuilder.Entity<AnamnesisEN>().HasKey(a => a.IdAnamnesis);
+            modelBuilder.Entity<AnamnesisEN>()
+                .HasOne(a => a.Estudiante)
+                .WithOne(e => e.Anamnesis)
+                .HasForeignKey<AnamnesisEN>(a => a.IdEstudiante);
+
+            modelBuilder.Entity<EstudianteFamiliarEN>().ToTable("estudiante_familiares");
+            modelBuilder.Entity<EstudianteFamiliarEN>().HasKey(ef => ef.IdFamiliar);
+            modelBuilder.Entity<EstudianteFamiliarEN>()
+                .HasOne(ef => ef.Estudiante)
+                .WithMany(e => e.Familiares)
+                .HasForeignKey(ef => ef.IdEstudiante);
+
+            modelBuilder.Entity<EstudiantePreceptoriaEN>().ToTable("estudiante_preceptorias");
+            modelBuilder.Entity<EstudiantePreceptoriaEN>().HasKey(ep => ep.Id);
+            modelBuilder.Entity<EstudiantePreceptoriaEN>()
+                .HasOne(ep => ep.Estudiante)
+                .WithMany(e => e.Preceptorias)
+                .HasForeignKey(ep => ep.IdEstudiante);
           
 
            

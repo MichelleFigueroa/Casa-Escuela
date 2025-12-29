@@ -13,6 +13,10 @@ namespace CasaEscuela.DAL
             options.UseMySql(configuration.GetConnectionString("Conn"), ServerVersion.AutoDetect(configuration.GetConnectionString("Conn"))));
 
             services.AddScoped<IUsuarioBL, UsuarioDAL>();
+            services.AddScoped<IAnamnesisBL, AnamnesisDAL>();
+            services.AddScoped<IPreceptoriaBL, PreceptoriaDAL>();
+            services.AddScoped<ICatalogoBL, CatalogoDAL>();
+            services.AddScoped<IPermisoBL, PermisoDAL>();
        
             return services;
         }

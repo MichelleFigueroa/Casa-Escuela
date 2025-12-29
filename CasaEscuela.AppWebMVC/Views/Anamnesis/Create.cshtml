@@ -1,0 +1,303 @@
+@model CasaEscuela.BL.DTOs.AnamnesisRegistroDTO
+
+@{
+    ViewData["Title"] = "Registro de Anamnesis";
+}
+
+<div class="container py-4">
+    <form asp-action="Create" id="anamnesisForm">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <!-- 🧑‍🎓 Secci├│n A: Informaci├│n del Estudiante -->
+        <div class="card shadow-sm rounded mb-4">
+            <div class="card-header bg-white border-bottom-0 py-3">
+                <h5 class="card-title fw-bold mb-0 text-primary">
+                    <i class="ti ti-school me-2"></i>Informaci├│n del Estudiante
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Estudiante.Codigo" class="form-label fw-bold"></label>
+                        <input asp-for="Estudiante.Codigo" class="form-control" placeholder="Ej: EST001" />
+                        <span asp-validation-for="Estudiante.Codigo" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Estudiante.Nombres" class="form-label fw-bold"></label>
+                        <input asp-for="Estudiante.Nombres" class="form-control" required />
+                        <span asp-validation-for="Estudiante.Nombres" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Estudiante.Apellidos" class="form-label fw-bold"></label>
+                        <input asp-for="Estudiante.Apellidos" class="form-control" required />
+                        <span asp-validation-for="Estudiante.Apellidos" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Estudiante.FechaNacimiento" class="form-label fw-bold"></label>
+                        <input asp-for="Estudiante.FechaNacimiento" type="date" class="form-control" />
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Estudiante.Sexo" class="form-label fw-bold"></label>
+                        <select asp-for="Estudiante.Sexo" class="form-select" required>
+                            <option value="">Seleccione...</option>
+                            <option value="1">Masculino</option>
+                            <option value="2">Femenino</option>
+                            <option value="3">Otro</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Estudiante.NivelEscolarId" class="form-label fw-bold"></label>
+                        <select asp-for="Estudiante.NivelEscolarId" class="form-select" asp-items="ViewBag.NivelesEscolares">
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Estudiante.Grado" class="form-label fw-bold"></label>
+                        <input asp-for="Estudiante.Grado" class="form-control" />
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Estudiante.Seccion" class="form-label fw-bold"></label>
+                        <input asp-for="Estudiante.Seccion" class="form-control" />
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Estudiante.Jornada" class="form-label fw-bold"></label>
+                        <input asp-for="Estudiante.Jornada" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 👨‍👩‍👧 Secci├│n B: Miembros de la Familia -->
+        <div class="card shadow-sm rounded mb-4">
+            <div class="card-header bg-white border-bottom-0 py-3 d-flex justify-content-between align-items-center">
+                <h5 class="card-title fw-bold mb-0 text-primary">
+                    <i class="ti ti-users me-2"></i>Miembros de la Familia
+                </h5>
+                <button type="button" class="btn btn-primary btn-sm rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#addFamiliarModal">
+                    <i class="ti ti-plus me-1"></i>Agregar Familiar
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle border" id="familiaresTable">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Parentesco</th>
+                                <th>Nombre Completo</th>
+                                <th>Edad</th>
+                                <th>Ocupaci├│n</th>
+                                <th>Vive con Est.</th>
+                                <th>Acci├│n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="noFamiliaresRow">
+                                <td colspan="6" class="text-center text-muted py-4">No hay familiares registrados</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🧠 Secci├│n C: Detalles de la Anamnesis -->
+        <div class="card shadow-sm rounded mb-4">
+            <div class="card-header bg-white border-bottom-0 py-3">
+                <h5 class="card-title fw-bold mb-0 text-primary">
+                    <i class="ti ti-clipboard me-2"></i>Detalles de la Anamnesis
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Anamnesis.ViveConId" class="form-label fw-bold"></label>
+                        <select asp-for="Anamnesis.ViveConId" class="form-select" asp-items="ViewBag.ViveCon">
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Anamnesis.TipoFamiliaId" class="form-label fw-bold"></label>
+                        <select asp-for="Anamnesis.TipoFamiliaId" class="form-select" asp-items="ViewBag.TiposFamilia">
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label asp-for="Anamnesis.TipoPartoId" class="form-label fw-bold"></label>
+                        <select asp-for="Anamnesis.TipoPartoId" class="form-select" asp-items="ViewBag.TiposParto">
+                            <option value="">Seleccione...</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-check form-switch mt-4">
+                            <input asp-for="Anamnesis.EmbarazoControlado" class="form-check-input" type="checkbox">
+                            <label class="form-check-label fw-bold" asp-for="Anamnesis.EmbarazoControlado"></label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <label asp-for="Anamnesis.ComplicacionesEmbarazo" class="form-label fw-bold"></label>
+                        <textarea asp-for="Anamnesis.ComplicacionesEmbarazo" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Anamnesis.CondicionesSalud" class="form-label fw-bold"></label>
+                        <textarea asp-for="Anamnesis.CondicionesSalud" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Anamnesis.DesarrolloLenguaje" class="form-label fw-bold"></label>
+                        <textarea asp-for="Anamnesis.DesarrolloLenguaje" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Anamnesis.DesarrolloMotor" class="form-label fw-bold"></label>
+                        <textarea asp-for="Anamnesis.DesarrolloMotor" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Anamnesis.SituacionFamiliar" class="form-label fw-bold"></label>
+                        <textarea asp-for="Anamnesis.SituacionFamiliar" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Anamnesis.Observaciones" class="form-label fw-bold"></label>
+                        <textarea asp-for="Anamnesis.Observaciones" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Anamnesis.FechaEntrevista" class="form-label fw-bold"></label>
+                        <input asp-for="Anamnesis.FechaEntrevista" type="date" class="form-control" />
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label asp-for="Anamnesis.Entrevistador" class="form-label fw-bold"></label>
+                        <input asp-for="Anamnesis.Entrevistador" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="d-flex flex-column flex-md-row justify-content-end gap-2 mb-4">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary rounded shadow-sm px-4">
+                Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary rounded shadow-sm px-4">
+                Guardar Anamnesis
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Modal Agregar Familiar -->
+<div class="modal fade" id="addFamiliarModal" tabindex="-1" aria-labelledby="addFamiliarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content rounded border-0 shadow">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold" id="addFamiliarModalLabel">Nuevo Familiar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Parentesco</label>
+                        <select id="mParentesco" class="form-select">
+                            <option value="1">Padre</option>
+                            <option value="2">Madre</option>
+                            <option value="3">Encargado</option>
+                            <option value="4">Otro</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Nombres</label>
+                        <input type="text" id="mNombres" class="form-control" />
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Apellidos</label>
+                        <input type="text" id="mApellidos" class="form-control" />
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label class="form-label fw-bold">Edad</label>
+                        <input type="number" id="mEdad" class="form-control" />
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label class="form-label fw-bold">Tel├ofono</label>
+                        <input type="text" id="mTelefono" class="form-control" />
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Escolaridad</label>
+                        <input type="text" id="mEscolaridad" class="form-control" />
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Ocupaci├│n</label>
+                        <input type="text" id="mOcupacion" class="form-control" />
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="mViveConEstudiante">
+                            <label class="form-check-label fw-bold" for="mViveConEstudiante">
+                                Vive con el estudiante
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnConfirmAddFamiliar">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let familiarIndex = 0;
+
+        document.getElementById('btnConfirmAddFamiliar').addEventListener('click', function () {
+            const parentescoId = document.getElementById('mParentesco').value;
+            const parentescoText = document.getElementById('mParentesco').options[document.getElementById('mParentesco').selectedIndex].text;
+            const nombres = document.getElementById('mNombres').value;
+            const apellidos = document.getElementById('mApellidos').value;
+            const edad = document.getElementById('mEdad').value;
+            const telefono = document.getElementById('mTelefono').value;
+            const escolaridad = document.getElementById('mEscolaridad').value;
+            const ocupacion = document.getElementById('mOcupacion').value;
+            const viveCon = document.getElementById('mViveConEstudiante').checked;
+
+            if (!nombres || !apellidos) {
+                alert('Nombres y Apellidos son obligatorios');
+                return;
+            }
+
+            const tbody = document.querySelector('#familiaresTable tbody');
+            const noRow = document.getElementById('noFamiliaresRow');
+            if (noRow) noRow.remove();
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${parentescoText}</td>
+                <td>${nombres} ${apellidos}</td>
+                <td>${edad}</td>
+                <td>${ocupacion}</td>
+                <td>${viveCon ? '<span class="badge bg-success">S├¡</span>' : '<span class="badge bg-secondary">No</span>'}</td>
+                <td><button type="button" class="btn btn-danger btn-sm rounded" onclick="this.closest('tr').remove()"><i class="ti ti-trash"></i></button></td>
+                
+                <input type="hidden" name="Familiares[${familiarIndex}].TipoParentesco" value="${parentescoId}" />
+                <input type="hidden" name="Familiares[${familiarIndex}].Nombres" value="${nombres}" />
+                <input type="hidden" name="Familiares[${familiarIndex}].Apellidos" value="${apellidos}" />
+                <input type="hidden" name="Familiares[${familiarIndex}].Edad" value="${edad}" />
+                <input type="hidden" name="Familiares[${familiarIndex}].Telefono" value="${telefono}" />
+                <input type="hidden" name="Familiares[${familiarIndex}].Escolaridad" value="${escolaridad}" />
+                <input type="hidden" name="Familiares[${familiarIndex}].Ocupacion" value="${ocupacion}" />
+                <input type="hidden" name="Familiares[${familiarIndex}].ViveConEstudiante" value="${viveCon}" />
+            `;
+
+            tbody.appendChild(row);
+            familiarIndex++;
+
+            // Reset modal and close
+            document.getElementById('mNombres').value = '';
+            document.getElementById('mApellidos').value = '';
+            document.getElementById('mEdad').value = '';
+            document.getElementById('mTelefono').value = '';
+            document.getElementById('mEscolaridad').value = '';
+            document.getElementById('mOcupacion').value = '';
+            document.getElementById('mViveConEstudiante').checked = false;
+            bootstrap.Modal.getInstance(document.getElementById('addFamiliarModal')).hide();
+        });
+    </script>
+}
