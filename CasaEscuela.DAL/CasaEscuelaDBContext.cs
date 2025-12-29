@@ -1,4 +1,5 @@
 ﻿using CasaEscuela.EN;
+using CasaEscuela.EN.CatologosEN;
 using CasaEscuela.EN.Seguridad;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -25,8 +26,27 @@ namespace CasaEscuela.DAL
         public DbSet<CorrelativoEN> Correlativos { get; set; }
        
         public DbSet<Permiso> Permisos { get; set; }
+
         public DbSet<UsuarioPermiso> UsuarioPermisos { get; set; }
 
+        // ==========================
+        // CATÁLOGOS
+        // ==========================
+
+        public DbSet<CatNivelEscolarEN> CatNivelEscolar { get; set; }
+        public DbSet<CatTipoFamiliaEN> CatTipoFamilia { get; set; }
+        public DbSet<CatViveConEN> CatViveCon { get; set; }
+        public DbSet<CatTipoPartoEN> CatTipoParto { get; set; }
+        public DbSet<CatTipoPreceptoriaEN> CatTipoPreceptoria { get; set; }
+
+        // ==========================
+        // CORE
+        // ==========================
+
+        public DbSet<EstudianteEN> Estudiante { get; set; }
+        public DbSet<EstudianteFamiliarEN> EstudianteFamiliar { get; set; }
+        public DbSet<AnamnesisEN> Anamnesis { get; set; }
+        public DbSet<EstudiantePreceptoriaEN> EstudiantePreceptoria { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
