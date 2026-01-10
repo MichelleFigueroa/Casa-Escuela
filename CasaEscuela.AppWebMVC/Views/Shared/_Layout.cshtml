@@ -73,9 +73,45 @@
                    <img src="#" alt="Alternate Text" />
                 </a>
             </div>
-            <div class="navbar-content">
-                @await Component.InvokeAsync("Menu")
-            </div>
+                <div class="navbar-content">
+                    <ul class="pc-navbar" style="list-style: none; padding: 15px 0;">
+
+                        <li class="pc-item pc-caption"><label>Gestión Escolar</label></li>
+
+                        <li class="pc-item">
+                            <a href="@Url.Action("Index", "Estudiantes")" class="pc-link">
+                                <span class="pc-micon"><i class="ti ti-users"></i></span>
+                                <span class="pc-mtext">Estudiantes</span>
+                            </a>
+                        </li>
+
+                        <li class="pc-item">
+                            <a href="@Url.Action("Index", "Anamnesis")" class="pc-link">
+                                <span class="pc-micon"><i class="ti ti-clipboard-list"></i></span>
+                                <span class="pc-mtext">Anamnesis</span>
+                            </a>
+                        </li>
+
+                        <li class="pc-item">
+                            <a href="@Url.Action("Index", "Preceptoria")" class="pc-link">
+                                <span class="pc-micon"><i class="ti ti-notebook"></i></span>
+                                <span class="pc-mtext">Preceptorías</span>
+                            </a>
+                        </li>
+
+                        <li class="pc-item pc-caption"><label>Sistema</label></li>
+
+                        <li class="pc-item">
+                            <a href="@Url.Action("Index", "Usuario")" class="pc-link">
+                                <span class="pc-micon"><i class="ti ti-settings"></i></span>
+                                <span class="pc-mtext">Usuarios y Permisos</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <hr />
+                    @await Component.InvokeAsync("Menu")
+                </div>
 
 
                        
