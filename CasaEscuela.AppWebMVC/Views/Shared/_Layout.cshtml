@@ -1,371 +1,184 @@
 ﻿@{
- 
-
 }
 <!doctype html>
 <html lang="en">
-  <!-- [Head] start -->
-  <head>
-    <!-- [Meta] -->
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Casa Escuela @DateTime.Now.Year</title>
     <i class="bi bi-building"></i>
 
-    <!-- jQuery debe ir primero -->
     <script src="~/lib/startbootstrap/vendor/jquery/jquery.min.js"></script>
 
-    <!-- Bootstrap JS (debe estar antes que bootstrap-select) -->
     <script src="~/lib/startbootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Bootstrap Select CSS -->
     <link href="~/lib/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
 
-    <!-- Bootstrap Select JS -->
     <script src="~/lib/bootstrap-select/bootstrap-select.min.js"></script>
-
 
     <link href="~/select2.min.css" rel="stylesheet" />
     <script src="~/select2.min.js"></script>
     <link rel="manifest" href="@Url.Content("~/manifest.json")">
 
-     <!-- [Google Font] Family -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" id="main-font-link" />
-    <!-- [phosphor Icons] https://phosphoricons.com/ -->
     <link rel="stylesheet" href="~/assets/fonts/phosphor/duotone/style.css" />
-    <!-- [Tabler Icons] https://tablericons.com -->
     <link rel="stylesheet" href="~/assets/fonts/tabler-icons.min.css" />
-    <!-- [Feather Icons] https://feathericons.com -->
     <link rel="stylesheet" href="~/assets/fonts/feather.css" />
-    <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
     <link rel="stylesheet" href="~/assets/fonts/fontawesome.css" />
-    <!-- [Material Icons] https://fonts.google.com/icons -->
     <link rel="stylesheet" href="~/assets/fonts/material.css" />
-    <!-- [Template CSS Files] -->
     <link rel="stylesheet" href="~/assets/css/style.css" id="main-style-link" />
     <link rel="stylesheet" href="~/assets/css/style-preset.css" />
 
-    <!-- Dark Mode System -->
     <link rel="stylesheet" href="~/css/dark-mode-toggle-system.css" />
-  </head>
-  <!-- [Head] end -->
-  <!-- [Body] Start -->
-  <body>
-    <!-- [ Pre-loader ] start -->
-    <!-- Layout: _Layout.cshtml activo -->
-
-<div class="loader-bg">
-  <div class="loader-track">
-    <div class="loader-fill"></div>
-  </div>
-</div>
-<!-- [ Pre-loader ] End -->
- <!-- [ Sidebar Menu ] start -->
-<nav class="pc-sidebar">
-  <div class="navbar-wrapper">
-           
-       @if (User.Identity.IsAuthenticated)
-        {
-
-            <div class="m-header d-flex align-items-center justify-content-center">
-                <a href="~/home" class="b-brand text-primary">
-                   <img src="#" alt="Alternate Text" />
-                </a>
-            </div>
-            <div class="navbar-content">
-                @await Component.InvokeAsync("Menu")
-            </div>
-
-
-                       
-        }
-  </div>
-</nav>
-<!-- [ Sidebar Menu ] end -->
- <!-- [ Header Topbar ] start -->
-<header class="pc-header">
-  <div class="header-wrapper"><!-- [Mobile Media Block] start -->
-<div class="me-auto pc-mob-drp">
-  <ul class="list-unstyled">
-    <li class="pc-h-item header-mobile-collapse">
-      <a href="#" class="pc-head-link head-link-secondary ms-0" id="sidebar-hide">
-        <i class="ti ti-menu-2"></i>
-      </a>
-    </li>
-    <li class="pc-h-item pc-sidebar-popup">
-      <a href="#" class="pc-head-link head-link-secondary ms-0" id="mobile-collapse">
-        <i class="ti ti-menu-2"></i>
-      </a>
-    </li>
-    <li class="dropdown pc-h-item d-inline-flex d-md-none">
-      <a
-        class="pc-head-link head-link-secondary dropdown-toggle arrow-none m-0"
-        data-bs-toggle="dropdown"
-        href="#"
-        role="button"
-        aria-haspopup="false"
-        aria-expanded="false"
-      >
-      
-      </a>
-     
-    </li>
-   
-  </ul>
-</div>
-<!-- [Mobile Media Block end] -->
-<div class="ms-auto">
-  <ul class="list-unstyled">
-  @*<li class="dropdown pc-h-item">
-      <a
-        class="pc-head-link head-link-secondary dropdown-toggle arrow-none me-0"
-        data-bs-toggle="dropdown"
-        href="#"
-        role="button"
-        aria-haspopup="false"
-        aria-expanded="false"
-      >
-        <i class="ti ti-bell"></i>
-      </a>
-      @* <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
-        <div class="dropdown-header">
-          <a href="#!" class="link-primary float-end text-decoration-underline">Mark as all read</a>
-          <h5>
-            All Notification
-            <span class="badge bg-warning rounded-pill ms-1">01</span>
-          </h5>
+</head>
+<body>
+    <div class="loader-bg">
+        <div class="loader-track">
+            <div class="loader-fill"></div>
         </div>
-        <div class="dropdown-header px-0 text-wrap header-notification-scroll position-relative" style="max-height: calc(100vh - 215px)">
-          <div class="list-group list-group-flush w-100">
-            <div class="list-group-item list-group-item-action">
-              <div class="d-flex">
-                <div class="flex-shrink-0">
-                  <div class="user-avtar bg-light-success"><i class="ti ti-building-store"></i></div>
-                </div>
-                <div class="flex-grow-1 ms-1">
-                  <span class="float-end text-muted">3 min ago</span>
-                  <h5>Store Verification Done</h5>
-                  <p class="text-body fs-6">We have successfully received your request.</p>
-                  <div class="badge rounded-pill bg-light-danger">Unread</div>
-                </div>
-              </div>
-            </div>
-            <div class="list-group-item list-group-item-action">
-              <div class="d-flex">
-                <div class="flex-shrink-0">
-                  <img src="~/assets/images/user/avatar-3.jpg" alt="user-image" class="user-avtar" />
-                </div>
-                <div class="flex-grow-1 ms-1">
-                  <span class="float-end text-muted">10 min ago</span>
-                  <h5>Joseph William</h5>
-                  <p class="text-body fs-6">It is a long established fact that a reader will be distracted</p>
-                  <div class="badge rounded-pill bg-light-success">Confirmation of Account</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="dropdown-divider"></div>
-        <div class="text-center py-2">
-          <a href="#!" class="link-primary">Mark as all read</a>
-        </div>
-      </div>
-    </li>*@
-
-   
-
-
-    <li class="dropdown pc-h-item header-user-profile">
-      <a
-        class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0"
-        data-bs-toggle="dropdown"
-        href="#"
-        role="button"
-        aria-haspopup="false"
-        aria-expanded="false"
-      > 
-
-        <i class="fas fa-user-circle fa-2x text-gray-600 user-avtar"></i>
-
-        <span>
-          <i class="ti ti-settings"></i>
-        </span>
-      </a>
-      <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
-        <div class="dropdown-header">
-        @if (User.Identity.IsAuthenticated)
-        { <h4>
-            <span class="small text-muted"> @User.Identity.Name</span>
-          </h4>
-            <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
-               
-
-                <a class="dropdown-item" href='@Url.Action("Login", "Usuario")' onclick="cerrarSesion()">
-                    <i class="ti ti-logout"></i>
-                    Cerrar session
-                </a>
-                <a class="dropdown-item" href='@Url.Action("CambiarPassword", "Usuario")'>
-                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Cambiar Password
-                </a>
-
-            </div>
-        }
-        else
-        {
-            <span> Anonymous</span>
-        }
-          
-        </div>
-      </div>
-@*</li>*@
-</ul>
-</div>
-</div>
-</header>
-
-    <!-- [ Main Content ] start -->
-    <div class="pc-container">
-      <div class="pc-content">
-        <!-- [ Main Content ] start -->
-        <div class="row">
-          <!-- [ sample-page ] start -->
-                @RenderBody()
-         
-        
-        </div>
-                <!-- [ Main Content ] end -->
-              
-      </div>
     </div>
-    <!-- [ Main Content ] end -->
-    <footer class="pc-footer">
-      <div class="footer-wrapper container-fluid">
-        <div class="row">
-               
-
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span style="line-height: 70px;">Copyright &copy;Casa Escuela® @DateTime.Now.Year</span>
-                    </div>
+    <nav class="pc-sidebar">
+        <div class="navbar-wrapper">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="m-header d-flex align-items-center justify-content-center">
+                    <a href="~/home" class="b-brand text-primary">
+                        <h4 class="text-white mt-3">CASA ESCUELA</h4>
+                    </a>
                 </div>
-          <div class="col-sm-6 ms-auto my-1">
-            
-          </div>
-        </div>
-      </div>
-    </footer>
- <!-- Required Js -->
-    <script src="~/lib/startbootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/lib/startbootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    <!-- SheetJS -->
-    <script src="~/lib/excel/xlsx.min.js"></script>
+                <div class="navbar-content">
+                    <ul class="pc-navbar" style="list-style: none; padding: 15px 0;">
+                        <li class="pc-item pc-caption"><label>Gestión Escolar</label></li>
 
-    <script src="~/sweetalert2/sweetalert.min.js"></script>
-    <script src="~/lib/bootstrap-select/bootstrap-select.min.js"></script>
+                        <li class="pc-item">
+                            <a asp-controller="Estudiantes" asp-action="Index" class="pc-link">
+                                <span class="pc-micon"><i class="ti ti-users"></i></span>
+                                <span class="pc-mtext">Estudiantes</span>
+                            </a>
+                        </li>
+
+                        <li class="pc-item">
+                            <a asp-area="" asp-controller="Anamnesis" asp-action="Index" class="pc-link">
+                                <span class="pc-micon"><i class="ti ti-clipboard-list"></i></span>
+                                <span class="pc-mtext">Anamnesis</span>
+                            </a>
+                        </li>
+
+                        <li class="pc-item">
+                            <a asp-area="" asp-controller="Preceptoria" asp-action="Index" class="pc-link">
+                                <span class="pc-micon"><i class="ti ti-notebook"></i></span>
+                                <span class="pc-mtext">Preceptorías</span>
+                            </a>
+                        </li>
+
+                        <li class="pc-item pc-caption"><label>Sistema</label></li>
+
+                        <li class="pc-item">
+                            <a asp-area="" asp-controller="Usuario" asp-action="Index" class="pc-link">
+                                <span class="pc-micon"><i class="ti ti-settings"></i></span>
+                                <span class="pc-mtext">Usuarios y Permisos</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <hr />
+                    @await Component.InvokeAsync("Menu")
+                </div>
+            }
+        </div>
+    </nav>
+    <header class="pc-header">
+        <div class="header-wrapper">
+            <div class="me-auto pc-mob-drp">
+                <ul class="list-unstyled">
+                    <li class="pc-h-item header-mobile-collapse">
+                        <a href="#" class="pc-head-link head-link-secondary ms-0" id="sidebar-hide">
+                            <i class="ti ti-menu-2"></i>
+                        </a>
+                    </li>
+                    <li class="pc-h-item pc-sidebar-popup">
+                        <a href="#" class="pc-head-link head-link-secondary ms-0" id="mobile-collapse">
+                            <i class="ti ti-menu-2"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="ms-auto">
+                <ul class="list-unstyled">
+                    <li class="dropdown pc-h-item header-user-profile">
+                        <a class="pc-head-link head-link-primary dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                            <i class="fas fa-user-circle fa-2x text-gray-600 user-avtar"></i>
+                            <span><i class="ti ti-settings"></i></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
+                            <div class="dropdown-header">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <h4><span class="small text-muted">@User.Identity.Name</span></h4>
+                                    <div class="profile-notification-scroll position-relative" style="max-height: calc(100vh - 280px)">
+                                        <a class="dropdown-item" href='@Url.Action("Login", "Usuario")'>
+                                            <i class="ti ti-logout"></i> Cerrar sesión
+                                        </a>
+                                        <a class="dropdown-item" href='@Url.Action("CambiarPassword", "Usuario")'>
+                                            <i class="fas fa-key fa-sm fa-fw mr-2"></i> Cambiar Password
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span>Anonymous</span>
+                                }
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="pc-container">
+        <div class="pc-content">
+            <div class="row">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <footer class="pc-footer">
+        <div class="footer-wrapper container-fluid text-center">
+            <span style="line-height: 70px;">Copyright &copy; Casa Escuela® @DateTime.Now.Year</span>
+        </div>
+    </footer>
+
     <script src="~/assets/js/plugins/popper.min.js"></script>
     <script src="~/assets/js/plugins/simplebar.min.js"></script>
     <script src="~/assets/js/plugins/bootstrap.min.js"></script>
+
+    <script src="~/lib/startbootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/lib/startbootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/lib/excel/xlsx.min.js"></script>
+    <script src="~/sweetalert2/sweetalert.min.js"></script>
     <script src="~/assets/js/icon/custom-font.js"></script>
     <script src="~/assets/js/script.js"></script>
     <script src="~/assets/js/theme.js"></script>
     <script src="~/assets/js/plugins/feather.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-
-   
-        
-   
-        <script>
-          font_change('Roboto');
-        </script>
- 
-        <script>
-          change_box_container('false');
-        </script>
- 
-        <script>
-          layout_caption_change('true');
-        </script>
-   
-        <script>
-          layout_rtl_change('false');
-        </script>
- 
-        <script>
-          preset_change('preset-1');
-        </script>
     <script>
-            $(document).ready(function () {
-            $('.selectpicker').selectpicker();
+        font_change('Roboto');
+        change_box_container('false');
+        layout_caption_change('true');
+        layout_rtl_change('false');
+        preset_change('preset-1');
+
+        $(document).ready(function () {
+            if ($.fn.selectpicker) {
+                $('.selectpicker').selectpicker();
+            }
         });
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () {
-                navigator.serviceWorker.register('@Url.Content("~/service-worker.js?v=2.2")')
-
-                    .then(function (registration) {
-                        console.log('Service Worker registrado con éxito:', registration);
-                    })
-                    .catch(function (error) {
-                        console.error('Error al registrar el Service Worker:', error);
-                    });
-            });
-        }
-
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
-    <script src="@Url.Content("~/_framework/blazor.server.js")"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.7/signalr.min.js"></script>
-
-    <script>
-        const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/notificacionesHub")
-        .build();
-
-        connection.on("PermisosActualizados", async function () {
-            console.log("Permisos actualizados, refrescando sesión...");
-
-            await fetch('@Url.Action("RefrescarPermisos", "Usuario")', {
-                method: 'POST'
-            });
-            setTimeout(() => location.reload(), 200);
-        });
-
-        connection.start().catch(function (err) {
-            return console.error(err.toString());
-        });
-        document.addEventListener("DOMContentLoaded", function () {
-            @if (TempData["Mensaje"] != null)
-            {
-                <text>
-                    ActionsUI.alertSuccess('@TempData["Mensaje"]');
-                </text>
-            }
-            else if (TempData["MensajeError"] != null)
-            {
-                    <text>
-                        ActionsUI.alertError('@TempData["MensajeError"]');
-                    </text>
-            }
-
-            const deleteForms = document.querySelectorAll('.delete-form');
-            deleteForms.forEach(form => {
-                form.addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    const nombre = this.querySelector('button.btn-delete')?.getAttribute('data-nombre') || 'este elemento';
-
-                    ActionsUI.alertConfirmDelete(nombre, () => {
-                        this.submit();
-                    });
-                });
-            });
-        });
-    </script>
     <script src="~/js/dark-mode-toggle.js"></script>
-
-    <!-- [Page Specific JS] end -->
-  </body>
-  <!-- [Body] end -->
+</body>
 </html>

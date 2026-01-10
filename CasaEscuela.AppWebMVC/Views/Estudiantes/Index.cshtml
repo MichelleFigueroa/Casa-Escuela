@@ -1,0 +1,69 @@
+﻿@model IEnumerable<CasaEscuela.EN.EstudianteEN>
+
+@{
+    ViewData["Title"] = "Listado de Estudiantes y Pacientes";
+}
+
+<div class="pc-content">
+    <div class="card shadow border-0">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 text-white"><i class="ti ti-users me-2"></i>Listado de Estudiantes</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="dom-jstable">
+                    <thead class="table-light">
+                        <tr>
+                            <th>CÓDIGO</th>
+                            <th>NOMBRES</th>
+                            <th>APELLIDOS</th>
+                            <th>GRADO/SECCIÓN</th>
+                            <th class="text-center">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">@item.Codigo</td>
+                                <td>@item.Nombres</td>
+                                <td>@item.Apellidos</td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        @item.Grado @item.Seccion
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        @* Botón Expediente (PDF) *@
+                                        <a href="@Url.Action("GenerarExpedientePdf", new { id = item.IdEstudiante })"
+                                           class="btn btn-purple btn-sm text-white" style="background-color: #6f42c1;">
+                                            Expediente
+                                        </a>
+
+                                        @* Botón Detalles (Ojo) *@
+                                        <a href="@Url.Action("Details", new { id = item.IdEstudiante })"
+                                           class="btn btn-icon btn-outline-primary btn-sm">
+                                            <i class="ti ti-eye"></i>
+                                        </a>
+
+                                       
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+       
+        $(document).ready(function () {
+            $('#dom-jstable').DataTable();
+        });
+    </script>
+}

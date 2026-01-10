@@ -1,0 +1,119 @@
+﻿@model CasaEscuela.EN.EstudianteEN
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Expediente - @Model.Nombres @Model.Apellidos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-size: 11px;
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .header-box {
+            border-bottom: 2px solid #0056b3;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .section-title {
+            background: #f8f9fa;
+            padding: 5px 10px;
+            font-weight: bold;
+            border-left: 4px solid #0056b3;
+            margin-top: 20px;
+            text-transform: uppercase;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .table thead {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="p-4">
+    <div class="header-box d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="mb-0 text-primary fw-bold">CASA ESCUELA</h2>
+            <p class="mb-0 text-secondary">Expediente Consolidado del Estudiante</p>
+        </div>
+        <div class="text-end">
+            <p class="mb-0"><span class="info-label">Fecha de Impresión:</span> @DateTime.Now.ToString("dd/MM/yyyy")</p>
+            <p class="mb-0"><span class="info-label">Código Estudiante:</span> @Model.Codigo</p>
+        </div>
+    </div>
+
+    <div class="section-title">Información General</div>
+    <div class="row mt-2">
+        <div class="col-6 mb-2"><span class="info-label">Nombres:</span> @Model.Nombres</div>
+        <div class="col-6 mb-2"><span class="info-label">Apellidos:</span> @Model.Apellidos</div>
+        <div class="col-4"><span class="info-label">Grado:</span> @Model.Grado</div>
+        <div class="col-4"><span class="info-label">Sección:</span> @Model.Seccion</div>
+        <div class="col-4"><span class="info-label">Jornada:</span> @Model.Jornada</div>
+    </div>
+
+    <div class="section-title">Antecedentes Médicos y Familiares (Anamnesis)</div>
+    <div class="row mt-2">
+        <div class="col-12">
+            @if (Model.Anamnesis != null)
+            {
+                <p class="text-justify">@Model.Anamnesis.Observaciones</p>
+            }
+            else
+            {
+                <p class="text-muted italic">No se han registrado antecedentes de anamnesis para este estudiante.</p>
+            }
+        </div>
+    </div>
+
+    <div class="section-title">Historial de Seguimiento (Preceptorías)</div>
+    <table class="table table-bordered table-sm mt-2">
+        <thead>
+            <tr>
+                <th style="width: 12%;">Fecha</th>
+                <th style="width: 28%;">Procesos Trabajados</th>
+                <th style="width: 30%;">Metas Siguientes</th>
+                <th style="width: 30%;">Recomendaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Preceptorias != null && Model.Preceptorias.Any())
+            {
+                foreach (var p in Model.Preceptorias)
+                {
+                    <tr>
+                        <td class="text-center">@p.Fecha.ToString("dd/MM/yyyy")</td>
+                        <td>@p.ProcesosTrabajados</td>
+                        <td>@p.MetasSiguientes</td>
+                        <td>@p.Recomendaciones</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted py-3">No existen registros de preceptorías para este periodo académico.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="mt-5 pt-4">
+        <div class="row text-center">
+            <div class="col-5 border-top pt-2 mx-auto">Firma del Preceptor</div>
+            <div class="col-5 border-top pt-2 mx-auto">Sello de la Institución</div>
+        </div>
+    </div>
+</body>
+</html>

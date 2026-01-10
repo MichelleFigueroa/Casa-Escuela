@@ -43,7 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Estudiantes\" />
     <Folder Include="wwwroot\Rotativa\" />
   </ItemGroup>
 
