@@ -7,38 +7,8 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-CREATE DATABASE IF NOT EXISTS `escuelacasa` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `escuelacasa`;
-
-CREATE TABLE IF NOT EXISTS `anamnesis` (
-  `IdAnamnesis` int NOT NULL AUTO_INCREMENT,
-  `IdEstudiante` int NOT NULL,
-  `ViveConId` int DEFAULT NULL,
-  `TipoFamiliaId` int DEFAULT NULL,
-  `TipoPartoId` int DEFAULT NULL,
-  `EmbarazoControlado` bit(1) DEFAULT NULL,
-  `ComplicacionesEmbarazo` text COLLATE utf8mb4_unicode_ci,
-  `CondicionesSalud` text COLLATE utf8mb4_unicode_ci,
-  `DesarrolloLenguaje` text COLLATE utf8mb4_unicode_ci,
-  `DesarrolloMotor` text COLLATE utf8mb4_unicode_ci,
-  `SituacionFamiliar` text COLLATE utf8mb4_unicode_ci,
-  `Observaciones` text COLLATE utf8mb4_unicode_ci,
-  `FechaEntrevista` date DEFAULT NULL,
-  `Entrevistador` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`IdAnamnesis`),
-  KEY `IdEstudiante` (`IdEstudiante`),
-  KEY `ViveConId` (`ViveConId`),
-  KEY `TipoFamiliaId` (`TipoFamiliaId`),
-  KEY `TipoPartoId` (`TipoPartoId`),
-  CONSTRAINT `anamnesis_ibfk_1` FOREIGN KEY (`IdEstudiante`) REFERENCES `estudiantes` (`IdEstudiante`),
-  CONSTRAINT `anamnesis_ibfk_2` FOREIGN KEY (`ViveConId`) REFERENCES `catvivecon` (`Id`),
-  CONSTRAINT `anamnesis_ibfk_3` FOREIGN KEY (`TipoFamiliaId`) REFERENCES `cattipofamilia` (`Id`),
-  CONSTRAINT `anamnesis_ibfk_4` FOREIGN KEY (`TipoPartoId`) REFERENCES `cattipoparto` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-INSERT INTO `anamnesis` (`IdAnamnesis`, `IdEstudiante`, `ViveConId`, `TipoFamiliaId`, `TipoPartoId`, `EmbarazoControlado`, `ComplicacionesEmbarazo`, `CondicionesSalud`, `DesarrolloLenguaje`, `DesarrolloMotor`, `SituacionFamiliar`, `Observaciones`, `FechaEntrevista`, `Entrevistador`) VALUES
-	(2, 2, 1, 1, 1, b'1', 'DSDA', 'SDA', 'DFSDFS', 'FSDFSDF', 'DSFSDF', 'SDAFDSAFSA', '2025-12-29', 'WALTER'),
-	(3, 3, 1, 1, 1, b'1', 'NO', 'NO', 'NO', 'NO', 'NO', 'NINGUNA', '2025-12-29', 'WALTER MENA');
+CREATE DATABASE IF NOT EXISTS `casaescuela` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `casaescuela`;
 
 CREATE TABLE IF NOT EXISTS `catnivelescolar` (
   `Id` int NOT NULL AUTO_INCREMENT,
@@ -97,6 +67,61 @@ CREATE TABLE IF NOT EXISTS `correlativos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+CREATE TABLE IF NOT EXISTS `estudiantes` (
+  `IdEstudiante` int NOT NULL AUTO_INCREMENT,
+  `Codigo` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Nombres` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Apellidos` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `FechaNacimiento` date DEFAULT NULL,
+  `Sexo` tinyint NOT NULL,
+  `NivelEscolarId` int DEFAULT NULL,
+  `Grado` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Seccion` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Jornada` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Estado` bit(1) DEFAULT b'1',
+  `FechaRegistro` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`IdEstudiante`),
+  KEY `NivelEscolarId` (`NivelEscolarId`),
+  CONSTRAINT `estudiantes_ibfk_1` FOREIGN KEY (`NivelEscolarId`) REFERENCES `catnivelescolar` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `estudiantes` (`IdEstudiante`, `Codigo`, `Nombres`, `Apellidos`, `FechaNacimiento`, `Sexo`, `NivelEscolarId`, `Grado`, `Seccion`, `Jornada`, `Estado`, `FechaRegistro`) VALUES
+	(1, 'WEQWX', 'walter', 'mena', '2025-12-08', 1, 1, 'a', 'a', 'm', b'1', '2025-12-29 11:10:37'),
+	(2, 'WEQWX', 'walter', 'mena', '2025-12-08', 1, 1, 'a', 'a', 'm', b'1', '2025-12-29 11:10:59'),
+	(3, 'qwq12121', 'walter ernesto', 'mena', '2025-12-29', 1, 1, 'SEGUNDO', 'a', 'm', b'1', '2025-12-29 11:47:16');
+
+
+CREATE TABLE IF NOT EXISTS `anamnesis` (
+  `IdAnamnesis` int NOT NULL AUTO_INCREMENT,
+  `IdEstudiante` int NOT NULL,
+  `ViveConId` int DEFAULT NULL,
+  `TipoFamiliaId` int DEFAULT NULL,
+  `TipoPartoId` int DEFAULT NULL,
+  `EmbarazoControlado` bit(1) DEFAULT NULL,
+  `ComplicacionesEmbarazo` text COLLATE utf8mb4_unicode_ci,
+  `CondicionesSalud` text COLLATE utf8mb4_unicode_ci,
+  `DesarrolloLenguaje` text COLLATE utf8mb4_unicode_ci,
+  `DesarrolloMotor` text COLLATE utf8mb4_unicode_ci,
+  `SituacionFamiliar` text COLLATE utf8mb4_unicode_ci,
+  `Observaciones` text COLLATE utf8mb4_unicode_ci,
+  `FechaEntrevista` date DEFAULT NULL,
+  `Entrevistador` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`IdAnamnesis`),
+  KEY `IdEstudiante` (`IdEstudiante`),
+  KEY `ViveConId` (`ViveConId`),
+  KEY `TipoFamiliaId` (`TipoFamiliaId`),
+  KEY `TipoPartoId` (`TipoPartoId`),
+  CONSTRAINT `anamnesis_ibfk_1` FOREIGN KEY (`IdEstudiante`) REFERENCES `estudiantes` (`IdEstudiante`),
+  CONSTRAINT `anamnesis_ibfk_2` FOREIGN KEY (`ViveConId`) REFERENCES `catvivecon` (`Id`),
+  CONSTRAINT `anamnesis_ibfk_3` FOREIGN KEY (`TipoFamiliaId`) REFERENCES `cattipofamilia` (`Id`),
+  CONSTRAINT `anamnesis_ibfk_4` FOREIGN KEY (`TipoPartoId`) REFERENCES `cattipoparto` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `anamnesis` (`IdAnamnesis`, `IdEstudiante`, `ViveConId`, `TipoFamiliaId`, `TipoPartoId`, `EmbarazoControlado`, `ComplicacionesEmbarazo`, `CondicionesSalud`, `DesarrolloLenguaje`, `DesarrolloMotor`, `SituacionFamiliar`, `Observaciones`, `FechaEntrevista`, `Entrevistador`) VALUES
+	(2, 2, 1, 1, 1, b'1', 'DSDA', 'SDA', 'DFSDFS', 'FSDFSDF', 'DSFSDF', 'SDAFDSAFSA', '2025-12-29', 'WALTER'),
+	(3, 3, 1, 1, 1, b'1', 'NO', 'NO', 'NO', 'NO', 'NO', 'NINGUNA', '2025-12-29', 'WALTER MENA');
+
+
 CREATE TABLE IF NOT EXISTS `estudiantefamiliares` (
   `IdFamiliar` int NOT NULL AUTO_INCREMENT,
   `IdEstudiante` int NOT NULL,
@@ -140,28 +165,6 @@ INSERT INTO `estudiantepreceptorias` (`Id`, `IdEstudiante`, `TipoPreceptoriaId`,
 	(1, 2, 1, '2025-12-29', 'ASDAS', 'SDASD', 'SADASDA', 'SDAS', 2, '2025-12-29 11:12:34', NULL),
 	(2, 2, 1, '2025-12-29', 'nada', 'leer', 'lectura', 'app', 1, '2025-12-29 11:27:07', NULL);
 
-CREATE TABLE IF NOT EXISTS `estudiantes` (
-  `IdEstudiante` int NOT NULL AUTO_INCREMENT,
-  `Codigo` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Nombres` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Apellidos` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `FechaNacimiento` date DEFAULT NULL,
-  `Sexo` tinyint NOT NULL,
-  `NivelEscolarId` int DEFAULT NULL,
-  `Grado` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Seccion` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Jornada` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Estado` bit(1) DEFAULT b'1',
-  `FechaRegistro` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`IdEstudiante`),
-  KEY `NivelEscolarId` (`NivelEscolarId`),
-  CONSTRAINT `estudiantes_ibfk_1` FOREIGN KEY (`NivelEscolarId`) REFERENCES `catnivelescolar` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-INSERT INTO `estudiantes` (`IdEstudiante`, `Codigo`, `Nombres`, `Apellidos`, `FechaNacimiento`, `Sexo`, `NivelEscolarId`, `Grado`, `Seccion`, `Jornada`, `Estado`, `FechaRegistro`) VALUES
-	(1, 'WEQWX', 'walter', 'mena', '2025-12-08', 1, 1, 'a', 'a', 'm', b'1', '2025-12-29 11:10:37'),
-	(2, 'WEQWX', 'walter', 'mena', '2025-12-08', 1, 1, 'a', 'a', 'm', b'1', '2025-12-29 11:10:59'),
-	(3, 'qwq12121', 'walter ernesto', 'mena', '2025-12-29', 1, 1, 'SEGUNDO', 'a', 'm', b'1', '2025-12-29 11:47:16');
 
 CREATE TABLE IF NOT EXISTS `permisos` (
   `Id` int NOT NULL AUTO_INCREMENT,
@@ -235,6 +238,25 @@ INSERT INTO `permisos` (`Id`, `Nombre`, `Modulo`) VALUES
 	(126, 'USUARIOS_EDITAR', 'SEGURIDAD'),
 	(127, 'USUARIOS_VER', 'SEGURIDAD'),
 	(128, 'USUARIOS_ELIMINAR', 'SEGURIDAD');
+
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `DUI` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Nombre` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Apellido` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Email` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Password` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `FechRegistro` datetime NOT NULL,
+  `FechaValidez` datetime NOT NULL,
+  `CargoDirectiva` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Estado` tinyint DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `usuarios` (`Id`, `DUI`, `Nombre`, `Apellido`, `Email`, `Password`, `FechRegistro`, `FechaValidez`, `CargoDirectiva`, `Estado`) VALUES
+	(3, '000000000', 'Super', 'Administrador', 'root@admin.com', 'root123', '2025-11-23 22:17:05', '2035-11-23 22:17:05', NULL, 1),
+	(4, '000000004', 'WALTER ERNESTO', 'Mena Calderon ', 'admindev@gmail.com', 'admin123', '2025-11-24 08:10:40', '2030-11-24 08:10:40', NULL, 1);
+
 
 CREATE TABLE IF NOT EXISTS `usuariopermisos` (
   `IdUsuario` int NOT NULL,
@@ -318,24 +340,6 @@ INSERT INTO `usuariopermisos` (`IdUsuario`, `IdPermiso`) VALUES
 	(4, 106),
 	(4, 107),
 	(4, 108);
-
-CREATE TABLE IF NOT EXISTS `usuarios` (
-  `Id` int NOT NULL AUTO_INCREMENT,
-  `DUI` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Nombre` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Apellido` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Email` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Password` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `FechRegistro` datetime NOT NULL,
-  `FechaValidez` datetime NOT NULL,
-  `CargoDirectiva` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Estado` tinyint DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-INSERT INTO `usuarios` (`Id`, `DUI`, `Nombre`, `Apellido`, `Email`, `Password`, `FechRegistro`, `FechaValidez`, `CargoDirectiva`, `Estado`) VALUES
-	(3, '000000000', 'Super', 'Administrador', 'root@admin.com', 'root123', '2025-11-23 22:17:05', '2035-11-23 22:17:05', NULL, 1),
-	(4, '000000004', 'WALTER ERNESTO', 'Mena Calderon ', 'admindev@gmail.com', 'admin123', '2025-11-24 08:10:40', '2030-11-24 08:10:40', NULL, 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
