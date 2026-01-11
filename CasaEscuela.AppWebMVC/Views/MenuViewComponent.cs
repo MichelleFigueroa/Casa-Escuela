@@ -116,13 +116,13 @@ namespace CasaEscuela.AppWebMVC.Views
                     Icono = "fas fa-book-open",
                     SubMenu = new List<SubMenuDTO>
                     {
-                        new SubMenuDTO
-                        {
-                            Nombre = "Registrar Preceptoría",
-                            Url = Url.Action("Create","Preceptoria"),
-                            Permiso = "MENU_PRECEPTORIA_REGISTRAR",
-                            Icono = "fas fa-plus-circle me-2"
-                        },
+                        //new SubMenuDTO
+                        //{
+                        //    Nombre = "Registrar Preceptoría",
+                        //    Url = Url.Action("Create","Preceptoria"),
+                        //    Permiso = "MENU_PRECEPTORIA_REGISTRAR",
+                        //    Icono = "fas fa-plus-circle me-2"
+                        //},
                         new SubMenuDTO
                         {
                             Nombre = "Historial de Preceptorías",
@@ -136,54 +136,54 @@ namespace CasaEscuela.AppWebMVC.Views
                 // ======================================================
                 // === ANÁLISIS PSICOLÓGICO
                 // ======================================================
-                new MenuDTO
-                {
-                    Nombre = "Análisis Psicológico",
-                    Icono = "fas fa-brain",
-                    SubMenu = new List<SubMenuDTO>
-                    {
-                        new SubMenuDTO
-                        {
-                            Nombre = "Nuevo Análisis",
-                            Url = Url.Action("Create","AnalisisPsicologico"),
-                            Permiso = "MENU_PSICOLOGICO_NUEVO",
-                            Icono = "fas fa-plus me-2"
-                        },
-                        new SubMenuDTO
-                        {
-                            Nombre = "Historial de Análisis",
-                            Url = Url.Action("Index","AnalisisPsicologico"),
-                            Permiso = "MENU_PSICOLOGICO_HISTORIAL",
-                            Icono = "fas fa-file-alt me-2"
-                        }
-                    }
-                },
+                //new MenuDTO
+                //{
+                //    Nombre = "Análisis Psicológico",
+                //    Icono = "fas fa-brain",
+                //    SubMenu = new List<SubMenuDTO>
+                //    {
+                //        new SubMenuDTO
+                //        {
+                //            Nombre = "Nuevo Análisis",
+                //            Url = Url.Action("Create","AnalisisPsicologico"),
+                //            Permiso = "MENU_PSICOLOGICO_NUEVO",
+                //            Icono = "fas fa-plus me-2"
+                //        },
+                //        new SubMenuDTO
+                //        {
+                //            Nombre = "Historial de Análisis",
+                //            Url = Url.Action("Index","AnalisisPsicologico"),
+                //            Permiso = "MENU_PSICOLOGICO_HISTORIAL",
+                //            Icono = "fas fa-file-alt me-2"
+                //        }
+                //    }
+                //},
 
                 // ======================================================
                 // === REGISTRO POST-CLASE
                 // ======================================================
-                new MenuDTO
-                {
-                    Nombre = "Registro Post-Clase",
-                    Icono = "fas fa-chalkboard-teacher",
-                    SubMenu = new List<SubMenuDTO>
-                    {
-                        new SubMenuDTO
-                        {
-                            Nombre = "Nuevo Registro",
-                            Url = Url.Action("Create","PostClase"),
-                            Permiso = "MENU_POSTCLASE_NUEVO",
-                            Icono = "fas fa-plus me-2"
-                        },
-                        new SubMenuDTO
-                        {
-                            Nombre = "Historial",
-                            Url = Url.Action("Index","PostClase"),
-                            Permiso = "MENU_POSTCLASE_HISTORIAL",
-                            Icono = "fas fa-list me-2"
-                        }
-                    }
-                },
+                //new MenuDTO
+                //{
+                //    Nombre = "Registro Post-Clase",
+                //    Icono = "fas fa-chalkboard-teacher",
+                //    SubMenu = new List<SubMenuDTO>
+                //    {
+                //        new SubMenuDTO
+                //        {
+                //            Nombre = "Nuevo Registro",
+                //            Url = Url.Action("Create","PostClase"),
+                //            Permiso = "MENU_POSTCLASE_NUEVO",
+                //            Icono = "fas fa-plus me-2"
+                //        },
+                //        new SubMenuDTO
+                //        {
+                //            Nombre = "Historial",
+                //            Url = Url.Action("Index","PostClase"),
+                //            Permiso = "MENU_POSTCLASE_HISTORIAL",
+                //            Icono = "fas fa-list me-2"
+                //        }
+                //    }
+                //},
 
                 // ======================================================
                 // === SEGURIDAD

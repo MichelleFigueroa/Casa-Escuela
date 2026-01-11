@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Casa Escuela @DateTime.Now.Year</title>
-    <i class="bi bi-building"></i>
+    <link rel="icon" type="image/png" href="@Url.Content("~/img/logo.png")" />
 
     <!-- jQuery debe ir primero -->
     <script src="~/lib/startbootstrap/vendor/jquery/jquery.min.js"></script>
@@ -67,49 +67,35 @@
            
        @if (User.Identity.IsAuthenticated)
         {
+                <style>
+                    .logo-sidebar {
+                        height: 70px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 0 10px;
+                        box-sizing: border-box;
+                    }
 
-            <div class="m-header d-flex align-items-center justify-content-center">
-                <a href="~/home" class="b-brand text-primary">
-                   <img src="#" alt="Alternate Text" />
-                </a>
-            </div>
+                    .logo-img {
+                        max-height: 150px;
+                        max-width: 110px;
+                        object-fit: contain;
+                        display: block;
+                    }
+                </style>
+
+              
+                <div class="m-header d-flex align-items-center justify-content-center">
+                   
+                    <div class="logo-sidebar">
+                        <a href="~/home" class="b-brand text-primary">
+                            <img src="~/img/logo.png" alt="Logo Sucursal" class="logo-img" />
+
+                        </a>
+                    </div>
+                </div>
                 <div class="navbar-content">
-                    <ul class="pc-navbar" style="list-style: none; padding: 15px 0;">
-
-                        <li class="pc-item pc-caption"><label>Gestión Escolar</label></li>
-
-                        <li class="pc-item">
-                            <a href="@Url.Action("Index", "Estudiantes")" class="pc-link">
-                                <span class="pc-micon"><i class="ti ti-users"></i></span>
-                                <span class="pc-mtext">Estudiantes</span>
-                            </a>
-                        </li>
-
-                        <li class="pc-item">
-                            <a href="@Url.Action("Index", "Anamnesis")" class="pc-link">
-                                <span class="pc-micon"><i class="ti ti-clipboard-list"></i></span>
-                                <span class="pc-mtext">Anamnesis</span>
-                            </a>
-                        </li>
-
-                        <li class="pc-item">
-                            <a href="@Url.Action("Index", "Preceptoria")" class="pc-link">
-                                <span class="pc-micon"><i class="ti ti-notebook"></i></span>
-                                <span class="pc-mtext">Preceptorías</span>
-                            </a>
-                        </li>
-
-                        <li class="pc-item pc-caption"><label>Sistema</label></li>
-
-                        <li class="pc-item">
-                            <a href="@Url.Action("Index", "Usuario")" class="pc-link">
-                                <span class="pc-micon"><i class="ti ti-settings"></i></span>
-                                <span class="pc-mtext">Usuarios y Permisos</span>
-                            </a>
-                        </li>
-                    </ul>
-
-                    <hr />
                     @await Component.InvokeAsync("Menu")
                 </div>
 
