@@ -46,10 +46,11 @@
                                                class="btn btn-sm btn-outline-info rounded shadow-sm" title="Ver Expediente">
                                                 <i class="ti ti-file-description"></i> Expediente
                                             </a>
-                                            <a href="@Url.Action("Create", "Anamnesis", new { idEstudiante = item.IdEstudiante })" 
-                                               class="btn btn-sm btn-outline-primary rounded shadow-sm" title="Editar Anamnesis">
+                                            <a href="@Url.Action("Edit", "Anamnesis", new { idEstudiante = item.IdEstudiante })"
+                                               class="btn btn-sm btn-outline-primary rounded shadow-sm">
                                                 <i class="ti ti-edit"></i>
                                             </a>
+
                                         </div>
                                     </td>
                                 </tr>

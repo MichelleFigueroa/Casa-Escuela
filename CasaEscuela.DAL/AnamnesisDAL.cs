@@ -20,7 +20,7 @@ namespace CasaEscuela.DAL
             dbContext = context;
         }
 
-        public async Task<int> CrearAnamnesisAsync(EstudianteMantDTO pEstudiante, List<EstudianteFamiliarMantDTO> pFamiliares, AnamnesisMantDTO pAnamnesis)
+        public async Task<int>  GuardarAnamnesisAsync(EstudianteMantDTO pEstudiante, List<EstudianteFamiliarMantDTO> pFamiliares, AnamnesisMantDTO pAnamnesis)
         {
             using var transaction = await dbContext.Database.BeginTransactionAsync();
             try
@@ -91,26 +91,57 @@ namespace CasaEscuela.DAL
                     await dbContext.SaveChangesAsync();
                 }
 
-                // 3. Guardar Anamnesis
-                var anamnesisEN = new AnamnesisEN
+                // 3. Guardar o Actualizar Anamnesis
+                AnamnesisEN anamnesisEN;
+
+                if (pAnamnesis.IdAnamnesis > 0)
                 {
-                    IdEstudiante = idEstudiante,
-                    ViveConId = pAnamnesis.ViveConId,
-                    TipoFamiliaId = pAnamnesis.TipoFamiliaId,
-                    TipoPartoId = pAnamnesis.TipoPartoId,
-                    EmbarazoControlado = pAnamnesis.EmbarazoControlado,
-                    ComplicacionesEmbarazo = pAnamnesis.ComplicacionesEmbarazo,
-                    CondicionesSalud = pAnamnesis.CondicionesSalud,
-                    DesarrolloLenguaje = pAnamnesis.DesarrolloLenguaje,
-                    DesarrolloMotor = pAnamnesis.DesarrolloMotor,
-                    SituacionFamiliar = pAnamnesis.SituacionFamiliar,
-                    Observaciones = pAnamnesis.Observaciones,
-                    FechaEntrevista = pAnamnesis.FechaEntrevista,
-                    Entrevistador = pAnamnesis.Entrevistador
-                };
-                
-                dbContext.Anamnesis.Add(anamnesisEN);
+                    // ?? EDITAR
+                    anamnesisEN = await dbContext.Anamnesis.FindAsync(pAnamnesis.IdAnamnesis);
+
+                    if (anamnesisEN == null)
+                        throw new Exception("La anamnesis no existe");
+
+                    anamnesisEN.ViveConId = pAnamnesis.ViveConId;
+                    anamnesisEN.TipoFamiliaId = pAnamnesis.TipoFamiliaId;
+                    anamnesisEN.TipoPartoId = pAnamnesis.TipoPartoId;
+                    anamnesisEN.EmbarazoControlado = pAnamnesis.EmbarazoControlado;
+                    anamnesisEN.ComplicacionesEmbarazo = pAnamnesis.ComplicacionesEmbarazo;
+                    anamnesisEN.CondicionesSalud = pAnamnesis.CondicionesSalud;
+                    anamnesisEN.DesarrolloLenguaje = pAnamnesis.DesarrolloLenguaje;
+                    anamnesisEN.DesarrolloMotor = pAnamnesis.DesarrolloMotor;
+                    anamnesisEN.SituacionFamiliar = pAnamnesis.SituacionFamiliar;
+                    anamnesisEN.Observaciones = pAnamnesis.Observaciones;
+                    anamnesisEN.FechaEntrevista = pAnamnesis.FechaEntrevista;
+                    anamnesisEN.Entrevistador = pAnamnesis.Entrevistador;
+
+                    dbContext.Anamnesis.Update(anamnesisEN);
+                }
+                else
+                {
+                    // ?? NUEVO
+                    anamnesisEN = new AnamnesisEN
+                    {
+                        IdEstudiante = idEstudiante,
+                        ViveConId = pAnamnesis.ViveConId,
+                        TipoFamiliaId = pAnamnesis.TipoFamiliaId,
+                        TipoPartoId = pAnamnesis.TipoPartoId,
+                        EmbarazoControlado = pAnamnesis.EmbarazoControlado,
+                        ComplicacionesEmbarazo = pAnamnesis.ComplicacionesEmbarazo,
+                        CondicionesSalud = pAnamnesis.CondicionesSalud,
+                        DesarrolloLenguaje = pAnamnesis.DesarrolloLenguaje,
+                        DesarrolloMotor = pAnamnesis.DesarrolloMotor,
+                        SituacionFamiliar = pAnamnesis.SituacionFamiliar,
+                        Observaciones = pAnamnesis.Observaciones,
+                        FechaEntrevista = pAnamnesis.FechaEntrevista,
+                        Entrevistador = pAnamnesis.Entrevistador
+                    };
+
+                    dbContext.Anamnesis.Add(anamnesisEN);
+                }
+
                 await dbContext.SaveChangesAsync();
+
 
                 // 4. Guardar Adjuntos
                 if (pAnamnesis.ArchivosSubidos != null && pAnamnesis.ArchivosSubidos.Count > 0)

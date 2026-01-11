@@ -46,23 +46,27 @@ namespace CasaEscuela.AppWebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AnamnesisRegistroDTO model)
+        public async Task<IActionResult> Save(AnamnesisRegistroDTO model)
         {
-            
-                try
-                {
-                    int idEstudiante = await _anamnesisBL.CrearAnamnesisAsync(model.Estudiante, model.Familiares, model.Anamnesis);
-                    return RedirectToAction("Expediente", new { idEstudiante = idEstudiante });
-                }
-                catch (System.Exception ex)
-                {
-                    ModelState.AddModelError("", "Error al guardar la anamnesis: " + ex.Message);
-                }
-            
+            try
+            {
+                int idEstudiante = await _anamnesisBL.GuardarAnamnesisAsync(
+                    model.Estudiante,
+                    model.Familiares,
+                    model.Anamnesis
+                );
+
+                return RedirectToAction("Expediente", new { idEstudiante });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+            }
 
             await CargarCatalogos();
-            return View(model);
+            return View("Create", model);
         }
+
 
         public async Task<IActionResult> Expediente(int idEstudiante)
         {
@@ -117,5 +121,17 @@ namespace CasaEscuela.AppWebMVC.Controllers
                 return BadRequest("Error al eliminar adjunto: " + ex.Message);
             }
         }
+
+        public async Task<IActionResult> Edit(int idEstudiante)
+        {
+            await CargarCatalogos();
+
+            var model = await _anamnesisBL.ObtenerAnamnesisRegistroPorIdEstudianteAsync(idEstudiante);
+
+            if (model == null) return NotFound();
+
+            return View("Create", model); // reutiliza la vista Create
+        }
+
     }
 }
