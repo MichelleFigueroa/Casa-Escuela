@@ -67,5 +67,10 @@ namespace CasaEscuela.BL.DTOs
         [StringLength(100)]
         [Display(Name = "Entrevistador")]
         public string Entrevistador { get; set; }
+
+        // ====== ADJUNTOS ======
+        public List<AnamnesisAdjuntoDTO> AdjuntosExistentes { get; set; } = new List<AnamnesisAdjuntoDTO>();
+
+        public List<Microsoft.AspNetCore.Http.IFormFile> ArchivosSubidos { get; set; }
     }
 }

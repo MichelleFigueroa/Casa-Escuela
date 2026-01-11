@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CasaEscuela.BL.DTOs.PreceptoriaDTOs;
+using System.IO;
 
 namespace CasaEscuela.DAL
 {
@@ -57,6 +59,32 @@ namespace CasaEscuela.DAL
             }
 
             await dbContext.SaveChangesAsync();
+
+            // Handle Attachments
+            if (pPreceptoria.ArchivosSubidos != null && pPreceptoria.ArchivosSubidos.Count > 0)
+            {
+                foreach (var file in pPreceptoria.ArchivosSubidos)
+                {
+                    if (file.Length > 0)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            await file.CopyToAsync(ms);
+                            var adjunto = new PreceptoriaAdjuntoEN
+                            {
+                                PreceptoriaId = preceptoriaEN.Id,
+                                NombreArchivo = file.FileName,
+                                ContentType = file.ContentType,
+                                Contenido = ms.ToArray(),
+                                FechaCreacion = DateTime.Now
+                            };
+                            dbContext.PreceptoriaAdjuntos.Add(adjunto);
+                        }
+                    }
+                }
+                await dbContext.SaveChangesAsync();
+            }
+
             return preceptoriaEN.Id;
         }
 
@@ -102,7 +130,17 @@ namespace CasaEscuela.DAL
                 Recomendaciones = p.Recomendaciones,
                 EstadoPreceptoria = (byte)p.EstadoPreceptoria,
                 FechaCreacion = p.FechaCreacion,
-                FechaActualizacion = p.FechaActualizacion
+                FechaActualizacion = p.FechaActualizacion,
+                AdjuntosExistentes = await dbContext.PreceptoriaAdjuntos
+                    .Where(a => a.PreceptoriaId == p.Id)
+                    .Select(a => new PreceptoriaAdjuntoDTO
+                    {
+                        Id = a.Id,
+                        PreceptoriaId = a.PreceptoriaId,
+                        NombreArchivo = a.NombreArchivo,
+                        ContentType = a.ContentType,
+                        FechaCreacion = a.FechaCreacion
+                    }).ToListAsync()
             };
         }
 
@@ -127,6 +165,32 @@ namespace CasaEscuela.DAL
                 FechaCreacion = p.FechaCreacion,
                 FechaActualizacion = p.FechaActualizacion
             }).ToList();
+        }
+
+        public async Task<PreceptoriaAdjuntoDownloadDTO> ObtenerAdjuntoPorIdAsync(int id)
+        {
+            var adjunto = await dbContext.PreceptoriaAdjuntos.FindAsync(id);
+            if (adjunto == null) return null;
+
+            return new PreceptoriaAdjuntoDownloadDTO
+            {
+                Id = adjunto.Id,
+                PreceptoriaId = adjunto.PreceptoriaId,
+                NombreArchivo = adjunto.NombreArchivo,
+                ContentType = adjunto.ContentType,
+                FechaCreacion = adjunto.FechaCreacion,
+                Contenido = adjunto.Contenido
+            };
+        }
+
+        public async Task EliminarAdjuntoAsync(int id)
+        {
+            var adjunto = await dbContext.PreceptoriaAdjuntos.FindAsync(id);
+            if (adjunto != null)
+            {
+                dbContext.PreceptoriaAdjuntos.Remove(adjunto);
+                await dbContext.SaveChangesAsync();
+            }
         }
     }
 }

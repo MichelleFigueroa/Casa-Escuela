@@ -106,5 +106,32 @@ namespace CasaEscuela.AppWebMVC.Controllers
         {
             ViewBag.TiposPreceptoria = new SelectList(await _catalogoBL.ObtenerTiposPreceptoriaAsync(), "Id", "Descripcion");
         }
+
+        public async Task<IActionResult> DescargarAdjunto(int id)
+        {
+            var adjunto = await _preceptoriaBL.ObtenerAdjuntoPorIdAsync(id);
+            if (adjunto == null) return NotFound();
+
+            return File(adjunto.Contenido, adjunto.ContentType, adjunto.NombreArchivo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarAdjunto(int id)
+        {
+            try
+            {
+                var adjunto = await _preceptoriaBL.ObtenerAdjuntoPorIdAsync(id);
+                if (adjunto != null)
+                {
+                    await _preceptoriaBL.EliminarAdjuntoAsync(id);
+                    return RedirectToAction("Edit", new { id = adjunto.PreceptoriaId });
+                }
+                return NotFound();
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest("Error al eliminar adjunto: " + ex.Message);
+            }
+        }
     }
 }

@@ -163,6 +163,45 @@
                                 <label class="small text-muted d-block text-uppercase fw-bold">Observaciones Generales</label>
                                 <p class="text-dark">@(string.IsNullOrWhiteSpace(anamnesis.Observaciones) ? "Sin observaciones" : anamnesis.Observaciones)</p>
                             </div>
+                            
+                            @if (anamnesis.AdjuntosExistentes != null && anamnesis.AdjuntosExistentes.Any())
+                            {
+                                <div class="col-12 mt-4 pt-3 border-top">
+                                    <h6 class="fw-bold mb-3"><i class="ti ti-folder me-2"></i>Documentos Adjuntos</h6>
+                                    <div class="row g-2">
+                                        @foreach (var adj in anamnesis.AdjuntosExistentes)
+                                        {
+                                            <div class="col-md-6">
+                                                <div class="d-flex justify-content-between align-items-center p-2 border rounded bg-light">
+                                                    <div class="d-flex align-items-center text-truncate">
+                                                        <i class="ti ti-file-text fs-4 text-primary me-2"></i>
+                                                        <span class="text-truncate" title="@adj.NombreArchivo">@adj.NombreArchivo</span>
+                                                    </div>
+                                                    <div class="d-flex gap-1">
+                                                        <a href="@Url.Action("DescargarAdjunto", "Anamnesis", new { id = adj.Id })" class="btn btn-sm btn-outline-primary" target="_blank" title="Descargar">
+                                                            <i class="ti ti-download"></i>
+                                                        </a>
+                                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarAdjuntoAnamnesis(@adj.Id)" title="Eliminar">
+                                                            <i class="ti ti-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <script>
+                                    function eliminarAdjuntoAnamnesis(id) {
+                                        if(confirm('¿Está seguro de eliminar este documento del expediente?')) {
+                                            var form = document.createElement('form');
+                                            form.method = 'post';
+                                            form.action = '@Url.Action("EliminarAdjunto", "Anamnesis")/' + id;
+                                            document.body.appendChild(form);
+                                            form.submit();
+                                        }
+                                    }
+                                </script>
+                            }
                         </div>
                     }
                     else

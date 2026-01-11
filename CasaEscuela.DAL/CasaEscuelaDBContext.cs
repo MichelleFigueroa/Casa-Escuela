@@ -46,6 +46,8 @@ namespace CasaEscuela.DAL
         public DbSet<EstudianteEN> Estudiantes { get; set; }
         public DbSet<EstudianteFamiliarEN> EstudianteFamiliares { get; set; }
         public DbSet<AnamnesisEN> Anamnesis { get; set; }
+        public DbSet<AnamnesisAdjuntoEN> AnamnesisAdjuntos { get; set; }
+        public DbSet<PreceptoriaAdjuntoEN> PreceptoriaAdjuntos { get; set; }
         public DbSet<EstudiantePreceptoriaEN> EstudiantePreceptorias { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -94,6 +96,14 @@ namespace CasaEscuela.DAL
                 .WithOne(e => e.Anamnesis)
                 .HasForeignKey<AnamnesisEN>(a => a.IdEstudiante);
 
+            modelBuilder.Entity<AnamnesisAdjuntoEN>().ToTable("anamnesisadjuntos");
+            modelBuilder.Entity<AnamnesisAdjuntoEN>().HasKey(a => a.Id);
+            modelBuilder.Entity<AnamnesisAdjuntoEN>()
+                .HasOne(a => a.Anamnesis)
+                .WithMany()
+                .HasForeignKey(a => a.AnamnesisId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<EstudianteFamiliarEN>().ToTable("estudiantefamiliares");
             modelBuilder.Entity<EstudianteFamiliarEN>().HasKey(ef => ef.IdFamiliar);
             modelBuilder.Entity<EstudianteFamiliarEN>()
@@ -107,7 +117,14 @@ namespace CasaEscuela.DAL
                 .HasOne(ep => ep.Estudiante)
                 .WithMany(e => e.Preceptorias)
                 .HasForeignKey(ep => ep.IdEstudiante);
-          
+
+            modelBuilder.Entity<PreceptoriaAdjuntoEN>().ToTable("preceptoriaadjuntos");
+            modelBuilder.Entity<PreceptoriaAdjuntoEN>().HasKey(pa => pa.Id);
+            modelBuilder.Entity<PreceptoriaAdjuntoEN>()
+                .HasOne(pa => pa.Preceptoria)
+                .WithMany()
+                .HasForeignKey(pa => pa.PreceptoriaId)
+                .OnDelete(DeleteBehavior.Cascade);
 
            
 

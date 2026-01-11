@@ -11,5 +11,7 @@ namespace CasaEscuela.BL.Interfaces
         Task<AnamnesisMantDTO> ObtenerAnamnesisPorIdEstudianteAsync(int idEstudiante);
         Task<List<EstudianteMantDTO>> ObtenerEstudiantesConAnamnesisAsync();
         Task<AnamnesisRegistroDTO> ObtenerAnamnesisRegistroPorIdEstudianteAsync(int idEstudiante);
+        Task<AnamnesisAdjuntoDownloadDTO> ObtenerAdjuntoPorIdAsync(int id);
+        Task EliminarAdjuntoAsync(int id);
     }
 }

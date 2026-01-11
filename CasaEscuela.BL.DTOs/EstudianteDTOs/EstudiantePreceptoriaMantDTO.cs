@@ -54,5 +54,11 @@ namespace CasaEscuela.BL.DTOs.EstudianteDTOs
 
         public DateTime FechaCreacion { get; set; }
         public DateTime? FechaActualizacion { get; set; }
+        // ====== ADJUNTOS ======
+        public List<CasaEscuela.BL.DTOs.PreceptoriaDTOs.PreceptoriaAdjuntoDTO> AdjuntosExistentes { get; set; } = new List<CasaEscuela.BL.DTOs.PreceptoriaDTOs.PreceptoriaAdjuntoDTO>();
+        
+        
+        public List<Microsoft.AspNetCore.Http.IFormFile> ArchivosSubidos { get; set; }
+
     }
 }

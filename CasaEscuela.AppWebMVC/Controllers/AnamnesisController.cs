@@ -81,6 +81,41 @@ namespace CasaEscuela.AppWebMVC.Controllers
             ViewBag.TiposFamilia = new SelectList(await _catalogoBL.ObtenerTiposFamiliaAsync(), "Id", "Descripcion");
             ViewBag.ViveCon = new SelectList(await _catalogoBL.ObtenerViveConAsync(), "Id", "Descripcion");
             ViewBag.TiposParto = new SelectList(await _catalogoBL.ObtenerTiposPartoAsync(), "Id", "Descripcion");
+            ViewBag.TiposParto = new SelectList(await _catalogoBL.ObtenerTiposPartoAsync(), "Id", "Descripcion");
+        }
+
+        public async Task<IActionResult> DescargarAdjunto(int id)
+        {
+            var adjunto = await _anamnesisBL.ObtenerAdjuntoPorIdAsync(id);
+            if (adjunto == null) return NotFound();
+
+            return File(adjunto.Contenido, adjunto.ContentType, adjunto.NombreArchivo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarAdjunto(int id)
+        {
+            try
+            {
+                var adjunto = await _anamnesisBL.ObtenerAdjuntoPorIdAsync(id);
+                if (adjunto != null)
+                {
+                  
+                    var anamnesisDTO = await _anamnesisBL.ObtenerAnamnesisRegistroPorIdEstudianteAsync(0); // This method requires IdEstudiante...
+                    
+                    int anamnesisId = adjunto.AnamnesisId;
+
+                    await _anamnesisBL.EliminarAdjuntoAsync(id);
+
+                    
+                    return Redirect(Request.Headers["Referer"].ToString());
+                }
+                return NotFound();
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest("Error al eliminar adjunto: " + ex.Message);
+            }
         }
     }
 }

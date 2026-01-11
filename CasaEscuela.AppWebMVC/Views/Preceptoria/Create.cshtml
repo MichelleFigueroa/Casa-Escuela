@@ -14,7 +14,7 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    <form asp-action="@(Model.Id > 0 ? "Edit" : "Create")">
+                    <form asp-action="@(Model.Id > 0 ? "Edit" : "Create")" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="Id" />
                         <input type="hidden" asp-for="IdEstudiante" />
@@ -66,7 +66,52 @@
                                     <option value="3">Cerrada</option>
                                 </select>
                             </div>
+
+                            <div class="col-12 border-top pt-3 mt-3">
+                                <label class="form-label fw-bold">Adjuntar Archivos (PDF, Imagenes, Excel, etc)</label>
+                                <input type="file" name="ArchivosSubidos" multiple class="form-control" />
+                                <div class="form-text">Puede seleccionar múltiples archivos.</div>
+                            </div>
+                            
+                            @if (Model.AdjuntosExistentes != null && Model.AdjuntosExistentes.Any())
+                            {
+                                <div class="col-12 mt-3">
+                                    <h6 class="fw-bold">Archivos Adjuntos:</h6>
+                                    <ul class="list-group">
+                                    @foreach (var adj in Model.AdjuntosExistentes)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>
+                                                <i class="ti ti-file me-2"></i>@adj.NombreArchivo
+                                                <small class="text-muted ms-2">(@adj.FechaCreacion.ToString("dd/MM/yyyy"))</small>
+                                            </span>
+                                            <div>
+                                                <a href="@Url.Action("DescargarAdjunto", new { id = adj.Id })" class="btn btn-sm btn-outline-primary me-2" target="_blank">
+                                                    <i class="ti ti-download"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarAdjunto(@adj.Id)">
+                                                    <i class="ti ti-trash"></i>
+                                                </button>
+                                            </div>
+                                        </li>
+                                    }
+                                    </ul>
+                                </div>
+                            }
                         </div>
+
+                        <!-- Hidden form for deleting attachments -->
+                        <script>
+                            function eliminarAdjunto(id) {
+                                if(confirm('¿Está seguro de eliminar este archivo?')) {
+                                    var form = document.createElement('form');
+                                    form.method = 'post';
+                                    form.action = '@Url.Action("EliminarAdjunto", "Preceptoria")/' + id;
+                                    document.body.appendChild(form);
+                                    form.submit();
+                                }
+                            }
+                        </script>
 
                         <div class="d-flex flex-column flex-md-row justify-content-end gap-2 mt-4 pt-3 border-top">
                             <a href="@Url.Action("Expediente", "Anamnesis", new { idEstudiante = Model.IdEstudiante })" class="btn btn-outline-secondary rounded shadow-sm px-4">

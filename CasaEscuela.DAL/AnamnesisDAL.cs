@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace CasaEscuela.DAL
 {
@@ -110,6 +111,31 @@ namespace CasaEscuela.DAL
                 
                 dbContext.Anamnesis.Add(anamnesisEN);
                 await dbContext.SaveChangesAsync();
+
+                // 4. Guardar Adjuntos
+                if (pAnamnesis.ArchivosSubidos != null && pAnamnesis.ArchivosSubidos.Count > 0)
+                {
+                    foreach (var file in pAnamnesis.ArchivosSubidos)
+                    {
+                        if (file.Length > 0)
+                        {
+                            using (var ms = new MemoryStream())
+                            {
+                                await file.CopyToAsync(ms);
+                                var adjunto = new AnamnesisAdjuntoEN
+                                {
+                                    AnamnesisId = anamnesisEN.IdAnamnesis,
+                                    NombreArchivo = file.FileName,
+                                    ContentType = file.ContentType,
+                                    Contenido = ms.ToArray(),
+                                    FechaCreacion = DateTime.Now
+                                };
+                                dbContext.AnamnesisAdjuntos.Add(adjunto);
+                            }
+                        }
+                    }
+                    await dbContext.SaveChangesAsync();
+                }
 
                 await transaction.CommitAsync();
                 return idEstudiante;
@@ -218,9 +244,45 @@ namespace CasaEscuela.DAL
                     SituacionFamiliar = estudiante.Anamnesis.SituacionFamiliar,
                     Observaciones = estudiante.Anamnesis.Observaciones,
                     FechaEntrevista = estudiante.Anamnesis.FechaEntrevista,
-                    Entrevistador = estudiante.Anamnesis.Entrevistador
+                    Entrevistador = estudiante.Anamnesis.Entrevistador,
+                    AdjuntosExistentes = await dbContext.AnamnesisAdjuntos
+                        .Where(a => a.AnamnesisId == estudiante.Anamnesis.IdAnamnesis)
+                        .Select(a => new AnamnesisAdjuntoDTO
+                        {
+                            Id = a.Id,
+                            AnamnesisId = a.AnamnesisId,
+                            NombreArchivo = a.NombreArchivo,
+                            ContentType = a.ContentType,
+                            FechaCreacion = a.FechaCreacion
+                        }).ToListAsync()
                 } : new AnamnesisMantDTO()
             };
+        }
+
+        public async Task<AnamnesisAdjuntoDownloadDTO> ObtenerAdjuntoPorIdAsync(int id)
+        {
+            var adjunto = await dbContext.AnamnesisAdjuntos.FindAsync(id);
+            if (adjunto == null) return null;
+
+            return new AnamnesisAdjuntoDownloadDTO
+            {
+                Id = adjunto.Id,
+                AnamnesisId = adjunto.AnamnesisId,
+                NombreArchivo = adjunto.NombreArchivo,
+                ContentType = adjunto.ContentType,
+                FechaCreacion = adjunto.FechaCreacion,
+                Contenido = adjunto.Contenido
+            };
+        }
+
+        public async Task EliminarAdjuntoAsync(int id)
+        {
+            var adjunto = await dbContext.AnamnesisAdjuntos.FindAsync(id);
+            if (adjunto != null)
+            {
+                dbContext.AnamnesisAdjuntos.Remove(adjunto);
+                await dbContext.SaveChangesAsync();
+            }
         }
     }
 }
