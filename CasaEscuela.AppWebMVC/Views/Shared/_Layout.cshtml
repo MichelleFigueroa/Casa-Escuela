@@ -42,14 +42,18 @@
         <div class="navbar-wrapper">
             @if (User.Identity.IsAuthenticated)
             {
-                <div class="m-header d-flex align-items-center justify-content-center">
-                    <a href="~/home" class="b-brand text-primary">
-                        <h4 class="text-white mt-3">CASA ESCUELA</h4>
+                <div class="text-center py-4" style="margin-top:-18px;">
+                    <a href="/home">
+                        <img src="/img/logoCasaEscuela.png"
+                             alt="Casa Escuela"
+                             style="max-width:200px; height:auto;">
                     </a>
                 </div>
-                <div class="navbar-content">
-                    <ul class="pc-navbar" style="list-style: none; padding: 15px 0;">
-                        <li class="pc-item pc-caption"><label>Gestión Escolar</label></li>
+                <div class="navbar-content" style="height: calc(100vh - 240px); overflow-y: auto; scrollbar-width: thin;">
+                    <ul class="pc-navbar" style="list-style: none; padding: 7px 0;">
+                        <li class="pc-item pc-caption" style="margin-top:-16px;">
+                            <label style="font-size:1.1rem; letter-spacing:1px;">Gestión Escolar</label>
+                        </li>
 
                         <li class="pc-item">
                             <a asp-controller="Estudiantes" asp-action="Index" class="pc-link">

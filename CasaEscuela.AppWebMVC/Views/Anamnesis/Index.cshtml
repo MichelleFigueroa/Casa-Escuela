@@ -1,4 +1,4 @@
-@model IEnumerable<CasaEscuela.BL.DTOs.EstudianteDTOs.EstudianteMantDTO>
+@model IEnumerable<CasaEscuela.BL.DTOs.EstudianteDTOs.EstudianteMantDTO> 
 
 @{
     ViewData["Title"] = "Listado de Anamnesis";
@@ -46,7 +46,7 @@
                                                class="btn btn-sm btn-outline-info rounded shadow-sm" title="Ver Expediente">
                                                 <i class="ti ti-file-description"></i> Expediente
                                             </a>
-                                            <a href="@Url.Action("Create", "Anamnesis", new { idEstudiante = item.IdEstudiante })" 
+                                            <a href="@Url.Action("Crear", "Anamnesis", new { idEstudiante = item.IdEstudiante })" 
                                                class="btn btn-sm btn-outline-primary rounded shadow-sm" title="Editar Anamnesis">
                                                 <i class="ti ti-edit"></i>
                                             </a>
