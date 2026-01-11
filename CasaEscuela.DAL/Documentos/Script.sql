@@ -346,3 +346,33 @@ INSERT INTO `usuariopermisos` (`IdUsuario`, `IdPermiso`) VALUES
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+
+
+
+
+
+
+CREATE TABLE `preceptoriaadjuntos` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `PreceptoriaId` int NOT NULL,
+  `NombreArchivo` varchar(255) NOT NULL,
+  `Contenido` longblob NOT NULL,
+  `ContentType` varchar(100) DEFAULT NULL,
+  `FechaCreacion` datetime NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `IX_PreceptoriaAdjuntos_PreceptoriaId` (`PreceptoriaId`),
+  CONSTRAINT `FK_PreceptoriaAdjuntos_EstudiantePreceptorias` FOREIGN KEY (`PreceptoriaId`) REFERENCES `estudiantepreceptorias` (`Id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+
+
+CREATE TABLE `anamnesisadjuntos` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `AnamnesisId` int NOT NULL,
+  `NombreArchivo` varchar(255) NOT NULL,
+  `Contenido` longblob NOT NULL,
+  `ContentType` varchar(100) DEFAULT NULL,
+  `FechaCreacion` datetime NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `IX_AnamnesisAdjuntos_AnamnesisId` (`AnamnesisId`),
+  CONSTRAINT `FK_AnamnesisAdjuntos_Anamnesis` FOREIGN KEY (`AnamnesisId`) REFERENCES `anamnesis` (`IdAnamnesis`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
