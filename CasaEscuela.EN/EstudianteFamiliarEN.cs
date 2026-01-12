@@ -17,11 +17,11 @@ namespace CasaEscuela.EN
         public string Apellidos { get; set; }
 
         public int? Edad { get; set; }
-        public string Escolaridad { get; set; }
-        public string Ocupacion { get; set; }
+        public string? Escolaridad { get; set; }
+        public string? Ocupacion { get; set; }
 
         public bool ViveConEstudiante { get; set; }
-        public string Telefono { get; set; }
+        public string? Telefono { get; set; }
 
         // Navegación
         public EstudianteEN Estudiante { get; set; }

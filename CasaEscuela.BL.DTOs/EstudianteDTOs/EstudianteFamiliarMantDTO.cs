@@ -37,11 +37,11 @@ namespace CasaEscuela.BL.DTOs.EstudianteDTOs
 
         [StringLength(100)]
         [Display(Name = "Escolaridad")]
-        public string Escolaridad { get; set; }
+        public string? Escolaridad { get; set; }
 
         [StringLength(100)]
         [Display(Name = "Ocupación")]
-        public string Ocupacion { get; set; }
+        public string? Ocupacion { get; set; }
 
         // ====== CONVIVENCIA ======
 
@@ -51,6 +51,6 @@ namespace CasaEscuela.BL.DTOs.EstudianteDTOs
         [Phone]
         [StringLength(20)]
         [Display(Name = "Teléfono")]
-        public string Telefono { get; set; }
+        public string? Telefono { get; set; }
     }
 }

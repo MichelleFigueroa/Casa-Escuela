@@ -12,5 +12,6 @@ namespace CasaEscuela.BL.DTOs
         public EstudianteMantDTO Estudiante { get; set; }
         public AnamnesisMantDTO Anamnesis { get; set; }
         public List<EstudianteFamiliarMantDTO> Familiares { get; set; } = new List<EstudianteFamiliarMantDTO>();
+        public List<TimelineItemDTO> Timeline { get; set; } = new List<TimelineItemDTO>();
     }
 }

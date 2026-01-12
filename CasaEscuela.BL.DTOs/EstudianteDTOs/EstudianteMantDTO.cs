@@ -13,7 +13,7 @@ namespace CasaEscuela.BL.DTOs.EstudianteDTOs
 
         [StringLength(20)]
         [Display(Name = "Código del estudiante")]
-        public string Codigo { get; set; }
+        public string? Codigo { get; set; }
 
         [Required(ErrorMessage = "Los nombres son obligatorios")]
         [StringLength(100)]
@@ -40,19 +40,22 @@ namespace CasaEscuela.BL.DTOs.EstudianteDTOs
 
         [StringLength(50)]
         [Display(Name = "Grado")]
-        public string Grado { get; set; }
+        public string? Grado { get; set; }
 
         [StringLength(10)]
         [Display(Name = "Sección")]
-        public string Seccion { get; set; }
+        public string? Seccion { get; set; }
 
         [StringLength(50)]
         [Display(Name = "Jornada")]
-        public string Jornada { get; set; }
+        public string? Jornada { get; set; }
 
         // ====== ESTADO ======
 
         [Display(Name = "Activo")]
         public bool Estado { get; set; } = true;
+
+        [Display(Name = "Fecha de Registro")]
+        public DateTime FechaRegistro { get; set; }
     }
 }

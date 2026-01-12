@@ -32,31 +32,31 @@ namespace CasaEscuela.BL.DTOs
 
         [StringLength(500)]
         [Display(Name = "Complicaciones durante el embarazo")]
-        public string ComplicacionesEmbarazo { get; set; }
+        public string? ComplicacionesEmbarazo { get; set; }
 
         // ====== SALUD Y DESARROLLO ======
 
         [StringLength(1000)]
         [Display(Name = "Condiciones de salud")]
-        public string CondicionesSalud { get; set; }
+        public string? CondicionesSalud { get; set; }
 
         [StringLength(1000)]
         [Display(Name = "Desarrollo del lenguaje")]
-        public string DesarrolloLenguaje { get; set; }
+        public string? DesarrolloLenguaje { get; set; }
 
         [StringLength(1000)]
         [Display(Name = "Desarrollo motor")]
-        public string DesarrolloMotor { get; set; }
+        public string? DesarrolloMotor { get; set; }
 
         // ====== CONTEXTO FAMILIAR ======
 
         [StringLength(1000)]
         [Display(Name = "Situación familiar")]
-        public string SituacionFamiliar { get; set; }
+        public string? SituacionFamiliar { get; set; }
 
         [StringLength(1000)]
         [Display(Name = "Observaciones")]
-        public string Observaciones { get; set; }
+        public string? Observaciones { get; set; }
 
         // ====== DATOS DE LA ENTREVISTA ======
 
@@ -66,7 +66,7 @@ namespace CasaEscuela.BL.DTOs
 
         [StringLength(100)]
         [Display(Name = "Entrevistador")]
-        public string Entrevistador { get; set; }
+        public string? Entrevistador { get; set; }
 
         // ====== ADJUNTOS ======
         public List<AnamnesisAdjuntoDTO> AdjuntosExistentes { get; set; } = new List<AnamnesisAdjuntoDTO>();

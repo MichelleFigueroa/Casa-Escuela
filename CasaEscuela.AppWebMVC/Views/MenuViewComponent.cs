@@ -41,7 +41,7 @@ namespace CasaEscuela.AppWebMVC.Views
                         new SubMenuDTO
                         {
                             Nombre = "Gestión de Estudiantes",
-                            Url = Url.Action("Index","Estudiante"),
+                            Url = Url.Action("Index","Anamnesis"),
                             Permiso = "MENU_ESTUDIANTES_GESTION",
                             Icono = "fas fa-users-line me-2"
                         }
@@ -71,13 +71,13 @@ namespace CasaEscuela.AppWebMVC.Views
                             Permiso = "MENU_EXPEDIENTE_DOCUMENTOS",
                             Icono = "fas fa-file-archive me-2"
                         },
-                        new SubMenuDTO
-                        {
-                            Nombre = "Línea Cronológica",
-                            Url = Url.Action("Cronologia","Expediente"),
-                            Permiso = "MENU_EXPEDIENTE_CRONOLOGIA",
-                            Icono = "fas fa-stream me-2"
-                        }
+                        //new SubMenuDTO
+                        //{
+                        //    Nombre = "Línea Cronológica",
+                        //    Url = Url.Action("Index","Anamnesis"),
+                        //    Permiso = "MENU_EXPEDIENTE_CRONOLOGIA",
+                        //    Icono = "fas fa-stream me-2"
+                        //}
                     }
                 },
 

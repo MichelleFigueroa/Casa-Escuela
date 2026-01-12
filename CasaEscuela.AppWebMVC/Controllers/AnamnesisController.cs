@@ -30,15 +30,27 @@ namespace CasaEscuela.AppWebMVC.Controllers
         public async Task<IActionResult> Create(int? idEstudiante)
         {
             await CargarCatalogos();
-            var model = new AnamnesisRegistroDTO();
-            model.Estudiante = new EstudianteMantDTO();
-            model.Anamnesis = new AnamnesisMantDTO();
-            model.Familiares = new List<EstudianteFamiliarMantDTO>();
+            
+            AnamnesisRegistroDTO model;
 
             if (idEstudiante.HasValue)
             {
-                model.Estudiante.IdEstudiante = idEstudiante.Value;
-                model.Anamnesis.IdEstudiante = idEstudiante.Value;
+                model = await _anamnesisBL.ObtenerAnamnesisRegistroPorIdEstudianteAsync(idEstudiante.Value);
+                if (model == null) 
+                {
+                     model = new AnamnesisRegistroDTO();
+                     model.Estudiante = new EstudianteMantDTO { IdEstudiante = idEstudiante.Value };
+                     model.Anamnesis = new AnamnesisMantDTO { IdEstudiante = idEstudiante.Value };
+                     model.Familiares = new List<EstudianteFamiliarMantDTO>();
+                }
+            }
+            else
+            {
+                // New
+                model = new AnamnesisRegistroDTO();
+                model.Estudiante = new EstudianteMantDTO();
+                model.Anamnesis = new AnamnesisMantDTO();
+                model.Familiares = new List<EstudianteFamiliarMantDTO>();
             }
 
             return View(model);
@@ -76,7 +88,92 @@ namespace CasaEscuela.AppWebMVC.Controllers
             var preceptorias = await _preceptoriaBL.ObtenerPreceptoriasPorEstudianteAsync(idEstudiante);
             ViewBag.Preceptorias = preceptorias;
             
+            // Construir Timeline
+            registro.Timeline = await ConstruirTimeline(registro, preceptorias);
+
             return View(registro);
+        }
+
+        public async Task<IActionResult> Cronologia(int idEstudiante)
+        {
+            var registro = await _anamnesisBL.ObtenerAnamnesisRegistroPorIdEstudianteAsync(idEstudiante);
+            if (registro == null) return NotFound();
+
+            var preceptorias = await _preceptoriaBL.ObtenerPreceptoriasPorEstudianteAsync(idEstudiante);
+            registro.Timeline = await ConstruirTimeline(registro, preceptorias);
+
+            return View(registro);
+        }
+
+        private async Task<List<TimelineItemDTO>> ConstruirTimeline(AnamnesisRegistroDTO registro, List<EstudiantePreceptoriaMantDTO> preceptorias)
+        {
+            var timeline = new List<TimelineItemDTO>();
+
+            // 1. Registro
+            if (registro.Estudiante.FechaRegistro != DateTime.MinValue)
+            {
+                timeline.Add(new TimelineItemDTO
+                {
+                    Fecha = registro.Estudiante.FechaRegistro,
+                    Titulo = "Ingreso a Casa-Escuela",
+                    Descripcion = "Registro inicial del estudiante en el sistema.",
+                    Icono = "ti-user-plus",
+                    Color = "success",
+                    Tipo = "Inicio"
+                });
+            }
+
+            // 2. Anamnesis
+            if (registro.Anamnesis != null && registro.Anamnesis.IdAnamnesis > 0 && registro.Anamnesis.FechaEntrevista.HasValue)
+            {
+                timeline.Add(new TimelineItemDTO
+                {
+                    Fecha = registro.Anamnesis.FechaEntrevista.Value,
+                    Titulo = "Entrevista Inicial (Anamnesis)",
+                    Descripcion = $"Entrevista realizada por {registro.Anamnesis.Entrevistador}.",
+                    Icono = "ti-clipboard-heart",
+                    Color = "primary",
+                    Tipo = "Anamnesis",
+                    EntidadId = registro.Anamnesis.IdAnamnesis
+                });
+
+                // Attachments in Anamnesis
+                if (registro.Anamnesis.AdjuntosExistentes != null)
+                {
+                   foreach(var adj in registro.Anamnesis.AdjuntosExistentes)
+                   {
+                        timeline.Add(new TimelineItemDTO
+                        {
+                            Fecha = adj.FechaCreacion,
+                            Titulo = "Documento Adjunto",
+                            Descripcion = $"Se adjuntó: {adj.NombreArchivo}",
+                            Icono = "ti-paperclip",
+                            Color = "info",
+                            Tipo = "Documento"
+                        });
+                   }
+                }
+            }
+
+            // 3. Preceptorias
+            if (preceptorias != null)
+            {
+                foreach (var p in preceptorias)
+                {
+                    timeline.Add(new TimelineItemDTO
+                    {
+                        Fecha = p.Fecha,
+                        Titulo = "Sesión de Preceptoría",
+                        Descripcion = $"Tema: {p.ProcesosTrabajados}. " + (p.EstadoPreceptoria == 3 ? "Sesión Cerrada." : "Sesión de Seguimiento."),
+                        Icono = "ti-messages",
+                        Color = p.EstadoPreceptoria == 3 ? "secondary" : "warning",
+                        Tipo = "Preceptoria",
+                        EntidadId = p.Id
+                    });
+                }
+            }
+
+            return timeline.OrderByDescending(t => t.Fecha).ToList();
         }
 
         private async Task CargarCatalogos()

@@ -67,11 +67,14 @@ namespace CasaEscuela.DAL
                 await dbContext.SaveChangesAsync();
                 int idEstudiante = estudianteEN.IdEstudiante;
 
-                // 2. Guardar Familiares
+                // 2. Guardar Familiares (Actualizar: Borrar anteriores y crear nuevos simplificado, o actualizar uno a uno)
+                // Estrategia: Borrar los existentes y recrear lista para limpiar
+                var familiaresExistentes = await dbContext.EstudianteFamiliares.Where(f => f.IdEstudiante == idEstudiante).ToListAsync();
+                dbContext.EstudianteFamiliares.RemoveRange(familiaresExistentes);
+                await dbContext.SaveChangesAsync(); // Commit delete
+
                 if (pFamiliares != null && pFamiliares.Any())
                 {
-                    
-                    
                     foreach (var fam in pFamiliares)
                     {
                         var familiarEN = new EstudianteFamiliarEN
@@ -91,36 +94,33 @@ namespace CasaEscuela.DAL
                     await dbContext.SaveChangesAsync();
                 }
 
-                // 3. Guardar o Actualizar Anamnesis
-                AnamnesisEN anamnesisEN;
-
-                if (pAnamnesis.IdAnamnesis > 0)
+                // 3. Guardar Anamnesis
+                // Verificar si existe
+                var anamnesisExistente = await dbContext.Anamnesis.FirstOrDefaultAsync(a => a.IdEstudiante == idEstudiante);
+                
+                if (anamnesisExistente != null)
                 {
-                    // ?? EDITAR
-                    anamnesisEN = await dbContext.Anamnesis.FindAsync(pAnamnesis.IdAnamnesis);
-
-                    if (anamnesisEN == null)
-                        throw new Exception("La anamnesis no existe");
-
-                    anamnesisEN.ViveConId = pAnamnesis.ViveConId;
-                    anamnesisEN.TipoFamiliaId = pAnamnesis.TipoFamiliaId;
-                    anamnesisEN.TipoPartoId = pAnamnesis.TipoPartoId;
-                    anamnesisEN.EmbarazoControlado = pAnamnesis.EmbarazoControlado;
-                    anamnesisEN.ComplicacionesEmbarazo = pAnamnesis.ComplicacionesEmbarazo;
-                    anamnesisEN.CondicionesSalud = pAnamnesis.CondicionesSalud;
-                    anamnesisEN.DesarrolloLenguaje = pAnamnesis.DesarrolloLenguaje;
-                    anamnesisEN.DesarrolloMotor = pAnamnesis.DesarrolloMotor;
-                    anamnesisEN.SituacionFamiliar = pAnamnesis.SituacionFamiliar;
-                    anamnesisEN.Observaciones = pAnamnesis.Observaciones;
-                    anamnesisEN.FechaEntrevista = pAnamnesis.FechaEntrevista;
-                    anamnesisEN.Entrevistador = pAnamnesis.Entrevistador;
-
-                    dbContext.Anamnesis.Update(anamnesisEN);
+                    // Update
+                    anamnesisExistente.ViveConId = pAnamnesis.ViveConId;
+                    anamnesisExistente.TipoFamiliaId = pAnamnesis.TipoFamiliaId;
+                    anamnesisExistente.TipoPartoId = pAnamnesis.TipoPartoId;
+                    anamnesisExistente.EmbarazoControlado = pAnamnesis.EmbarazoControlado;
+                    anamnesisExistente.ComplicacionesEmbarazo = pAnamnesis.ComplicacionesEmbarazo;
+                    anamnesisExistente.CondicionesSalud = pAnamnesis.CondicionesSalud;
+                    anamnesisExistente.DesarrolloLenguaje = pAnamnesis.DesarrolloLenguaje;
+                    anamnesisExistente.DesarrolloMotor = pAnamnesis.DesarrolloMotor;
+                    anamnesisExistente.SituacionFamiliar = pAnamnesis.SituacionFamiliar;
+                    anamnesisExistente.Observaciones = pAnamnesis.Observaciones;
+                    anamnesisExistente.FechaEntrevista = pAnamnesis.FechaEntrevista;
+                    anamnesisExistente.Entrevistador = pAnamnesis.Entrevistador;
+                    
+                    dbContext.Anamnesis.Update(anamnesisExistente);
+                    await dbContext.SaveChangesAsync();
                 }
                 else
                 {
-                    // ?? NUEVO
-                    anamnesisEN = new AnamnesisEN
+                    // Insert
+                    var anamnesisEN = new AnamnesisEN
                     {
                         IdEstudiante = idEstudiante,
                         ViveConId = pAnamnesis.ViveConId,
@@ -136,11 +136,11 @@ namespace CasaEscuela.DAL
                         FechaEntrevista = pAnamnesis.FechaEntrevista,
                         Entrevistador = pAnamnesis.Entrevistador
                     };
-
+                
                     dbContext.Anamnesis.Add(anamnesisEN);
+                    await dbContext.SaveChangesAsync();
+                    anamnesisExistente = anamnesisEN; // Asignar para uso abajo
                 }
-
-                await dbContext.SaveChangesAsync();
 
 
                 // 4. Guardar Adjuntos
@@ -155,7 +155,7 @@ namespace CasaEscuela.DAL
                                 await file.CopyToAsync(ms);
                                 var adjunto = new AnamnesisAdjuntoEN
                                 {
-                                    AnamnesisId = anamnesisEN.IdAnamnesis,
+                                    AnamnesisId = anamnesisExistente.IdAnamnesis,
                                     NombreArchivo = file.FileName,
                                     ContentType = file.ContentType,
                                     Contenido = ms.ToArray(),
@@ -245,7 +245,8 @@ namespace CasaEscuela.DAL
                     NivelEscolarId = estudiante.NivelEscolarId,
                     Grado = estudiante.Grado,
                     Seccion = estudiante.Seccion,
-                    Jornada = estudiante.Jornada
+                    Jornada = estudiante.Jornada,
+                    FechaRegistro = estudiante.FechaRegistro
                 },
                 Familiares = estudiante.Familiares.Select(f => new EstudianteFamiliarMantDTO
                 {

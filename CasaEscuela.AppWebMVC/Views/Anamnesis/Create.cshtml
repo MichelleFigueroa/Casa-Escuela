@@ -11,6 +11,9 @@
 
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <input type="hidden" asp-for="Estudiante.IdEstudiante" />
+        <input type="hidden" asp-for="Anamnesis.IdAnamnesis" />
+        <input type="hidden" asp-for="Anamnesis.IdEstudiante" />
 
         <!-- 🧑‍🎓 Secci├│n A: Informaci├│n del Estudiante -->
         <div class="card shadow-sm rounded mb-4">
@@ -77,27 +80,58 @@
                 <h5 class="card-title fw-bold mb-0 text-primary">
                     <i class="ti ti-users me-2"></i>Miembros de la Familia
                 </h5>
-                <button type="button" class="btn btn-primary btn-sm rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#addFamiliarModal">
+                <button type="button" class="btn btn-primary btn-sm rounded shadow-sm" onclick="addFamiliarRow()">
                     <i class="ti ti-plus me-1"></i>Agregar Familiar
                 </button>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle border" id="familiaresTable">
-                        <thead class="bg-light">
+                    <table class="table table-bordered table-sm align-middle" id="familiaresTable">
+                        <thead class="bg-light text-center small">
                             <tr>
-                                <th>Parentesco</th>
-                                <th>Nombre Completo</th>
-                                <th>Edad</th>
-                                <th>Ocupaci├│n</th>
-                                <th>Vive con Est.</th>
-                                <th>Acci├│n</th>
+                                <th style="width: 15%">Parentesco</th>
+                                <th style="width: 15%">Nombres</th>
+                                <th style="width: 15%">Apellidos</th>
+                                <th style="width: 8%">Edad</th>
+                                <th style="width: 10%">Teléfono</th>
+                                <th style="width: 12%">Escolaridad</th>
+                                <th style="width: 12%">Ocupación</th>
+                                <th style="width: 5%">Vive?</th>
+                                <th style="width: 5%"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr id="noFamiliaresRow">
-                                <td colspan="6" class="text-center text-muted py-4">No hay familiares registrados</td>
-                            </tr>
+                            @{ int i = 0; }
+                            @if (Model.Familiares != null && Model.Familiares.Any())
+                            {
+                                foreach (var familiar in Model.Familiares)
+                                {
+                                    <tr>
+                                        <td>
+                                            <select name="Familiares[@i].TipoParentesco" class="form-select form-select-sm">
+                                                <!option value="1" @(familiar.TipoParentesco == 1 ? "selected" : "")>Padre</!option>
+                                                <!option value="2" @(familiar.TipoParentesco == 2 ? "selected" : "")>Madre</!option>
+                                                <!option value="3" @(familiar.TipoParentesco == 3 ? "selected" : "")>Encargado</!option>
+                                                <!option value="4" @(familiar.TipoParentesco == 4 ? "selected" : "")>Otro</!option>
+                                            </select>
+                                        </td>
+                                        <td><input type="text" name="Familiares[@i].Nombres" value="@familiar.Nombres" class="form-control form-control-sm" required /></td>
+                                        <td><input type="text" name="Familiares[@i].Apellidos" value="@familiar.Apellidos" class="form-control form-control-sm" required /></td>
+                                        <td><input type="number" name="Familiares[@i].Edad" value="@familiar.Edad" class="form-control form-control-sm" /></td>
+                                        <td><input type="text" name="Familiares[@i].Telefono" value="@familiar.Telefono" class="form-control form-control-sm" /></td>
+                                        <td><input type="text" name="Familiares[@i].Escolaridad" value="@familiar.Escolaridad" class="form-control form-control-sm" /></td>
+                                        <td><input type="text" name="Familiares[@i].Ocupacion" value="@familiar.Ocupacion" class="form-control form-control-sm" /></td>
+                                        <td class="text-center">
+                                            <input type="checkbox" class="form-check-input" onchange="this.nextElementSibling.value = this.checked" @(familiar.ViveConEstudiante ? "checked" : "") />
+                                            <input type="hidden" name="Familiares[@i].ViveConEstudiante" value="@(familiar.ViveConEstudiante ? "true" : "false")" />
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-danger btn-sm p-1" onclick="this.closest('tr').remove()"><i class="ti ti-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -171,6 +205,34 @@
                     </div>
                      <div class="col-12 mt-4 pt-3 border-top">
                         <label class="form-label fw-bold"><i class="ti ti-paperclip me-2"></i>Adjuntar Documentos (Partida Nacimiento, Notas anteriores, etc)</label>
+                        
+                        <!-- Lista de Adjuntos Existentes -->
+                        @if (Model.Anamnesis.AdjuntosExistentes != null && Model.Anamnesis.AdjuntosExistentes.Any())
+                        {
+                            <div class="list-group mb-3">
+                                @foreach (var adjunto in Model.Anamnesis.AdjuntosExistentes)
+                                {
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <i class="ti ti-file-text text-primary me-3 fs-4"></i>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">@adjunto.NombreArchivo</h6>
+                                                <small class="text-muted">Subido: @adjunto.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</small>
+                                            </div>
+                                        </div>
+                                        <div class="btn-group">
+                                            <a href="@Url.Action("DescargarAdjunto", "Anamnesis", new { id = adjunto.Id })" class="btn btn-outline-primary btn-sm" target="_blank" title="Descargar">
+                                                <i class="ti ti-download"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmarEliminarAdjunto(@adjunto.Id)" title="Eliminar">
+                                                <i class="ti ti-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+
                         <input type="file" name="Anamnesis.ArchivosSubidos" multiple class="form-control" />
                         <div class="form-text">Puede seleccionar múltiples archivos.</div>
                     </div>
@@ -190,122 +252,58 @@
     </form>
 </div>
 
-<!-- Modal Agregar Familiar -->
-<div class="modal fade" id="addFamiliarModal" tabindex="-1" aria-labelledby="addFamiliarModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content rounded border-0 shadow">
-            <div class="modal-header border-bottom-0">
-                <h5 class="modal-title fw-bold" id="addFamiliarModalLabel">Nuevo Familiar</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row g-3">
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-bold">Parentesco</label>
-                        <select id="mParentesco" class="form-select">
-                            <option value="1">Padre</option>
-                            <option value="2">Madre</option>
-                            <option value="3">Encargado</option>
-                            <option value="4">Otro</option>
-                        </select>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-bold">Nombres</label>
-                        <input type="text" id="mNombres" class="form-control" />
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-bold">Apellidos</label>
-                        <input type="text" id="mApellidos" class="form-control" />
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <label class="form-label fw-bold">Edad</label>
-                        <input type="number" id="mEdad" class="form-control" />
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <label class="form-label fw-bold">Tel├ofono</label>
-                        <input type="text" id="mTelefono" class="form-control" />
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-bold">Escolaridad</label>
-                        <input type="text" id="mEscolaridad" class="form-control" />
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-bold">Ocupaci├│n</label>
-                        <input type="text" id="mOcupacion" class="form-control" />
-                    </div>
-                    <div class="col-12">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="mViveConEstudiante">
-                            <label class="form-check-label fw-bold" for="mViveConEstudiante">
-                                Vive con el estudiante
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="btnConfirmAddFamiliar">Agregar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @section Scripts {
     <script>
-        let familiarIndex = 0;
+        let familiarIndex = @(Model.Familiares != null ? Model.Familiares.Count : 0);
 
-        document.getElementById('btnConfirmAddFamiliar').addEventListener('click', function () {
-            const parentescoId = document.getElementById('mParentesco').value;
-            const parentescoText = document.getElementById('mParentesco').options[document.getElementById('mParentesco').selectedIndex].text;
-            const nombres = document.getElementById('mNombres').value;
-            const apellidos = document.getElementById('mApellidos').value;
-            const edad = document.getElementById('mEdad').value;
-            const telefono = document.getElementById('mTelefono').value;
-            const escolaridad = document.getElementById('mEscolaridad').value;
-            const ocupacion = document.getElementById('mOcupacion').value;
-            const viveCon = document.getElementById('mViveConEstudiante').checked;
-
-            if (!nombres || !apellidos) {
-                alert('Nombres y Apellidos son obligatorios');
-                return;
-            }
-
+        function addFamiliarRow() {
             const tbody = document.querySelector('#familiaresTable tbody');
-            const noRow = document.getElementById('noFamiliaresRow');
-            if (noRow) noRow.remove();
-
             const row = document.createElement('tr');
+            
             row.innerHTML = `
-                <td>${parentescoText}</td>
-                <td>${nombres} ${apellidos}</td>
-                <td>${edad}</td>
-                <td>${ocupacion}</td>
-                <td>${viveCon ? '<span class="badge bg-success">S├¡</span>' : '<span class="badge bg-secondary">No</span>'}</td>
-                <td><button type="button" class="btn btn-danger btn-sm rounded" onclick="this.closest('tr').remove()"><i class="ti ti-trash"></i></button></td>
-                
-                <input type="hidden" name="Familiares[${familiarIndex}].TipoParentesco" value="${parentescoId}" />
-                <input type="hidden" name="Familiares[${familiarIndex}].Nombres" value="${nombres}" />
-                <input type="hidden" name="Familiares[${familiarIndex}].Apellidos" value="${apellidos}" />
-                <input type="hidden" name="Familiares[${familiarIndex}].Edad" value="${edad}" />
-                <input type="hidden" name="Familiares[${familiarIndex}].Telefono" value="${telefono}" />
-                <input type="hidden" name="Familiares[${familiarIndex}].Escolaridad" value="${escolaridad}" />
-                <input type="hidden" name="Familiares[${familiarIndex}].Ocupacion" value="${ocupacion}" />
-                <input type="hidden" name="Familiares[${familiarIndex}].ViveConEstudiante" value="${viveCon}" />
+                <td>
+                    <select name="Familiares[${familiarIndex}].TipoParentesco" class="form-select form-select-sm">
+                        <option value="1">Padre</option>
+                        <option value="2">Madre</option>
+                        <option value="3">Encargado</option>
+                        <option value="4">Otro</option>
+                    </select>
+                </td>
+                <td><input type="text" name="Familiares[${familiarIndex}].Nombres" class="form-control form-control-sm" required /></td>
+                <td><input type="text" name="Familiares[${familiarIndex}].Apellidos" class="form-control form-control-sm" required /></td>
+                <td><input type="number" name="Familiares[${familiarIndex}].Edad" class="form-control form-control-sm" /></td>
+                <td><input type="text" name="Familiares[${familiarIndex}].Telefono" class="form-control form-control-sm" /></td>
+                <td><input type="text" name="Familiares[${familiarIndex}].Escolaridad" class="form-control form-control-sm" /></td>
+                <td><input type="text" name="Familiares[${familiarIndex}].Ocupacion" class="form-control form-control-sm" /></td>
+                <td class="text-center">
+                    <input type="checkbox" class="form-check-input" onchange="this.nextElementSibling.value = this.checked" />
+                    <input type="hidden" name="Familiares[${familiarIndex}].ViveConEstudiante" value="false" />
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm p-1" onclick="this.closest('tr').remove()"><i class="ti ti-trash"></i></button>
+                </td>
             `;
 
             tbody.appendChild(row);
             familiarIndex++;
+        }
 
-            // Reset modal and close
-            document.getElementById('mNombres').value = '';
-            document.getElementById('mApellidos').value = '';
-            document.getElementById('mEdad').value = '';
-            document.getElementById('mTelefono').value = '';
-            document.getElementById('mEscolaridad').value = '';
-            document.getElementById('mOcupacion').value = '';
-            document.getElementById('mViveConEstudiante').checked = false;
-            bootstrap.Modal.getInstance(document.getElementById('addFamiliarModal')).hide();
-        });
+        function confirmarEliminarAdjunto(idAdjunto) {
+            if (confirm('¿Está seguro de que desea eliminar este archivo adjunto?')) {
+                // Create a form to post to the delete action
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("EliminarAdjunto", "Anamnesis")';
+                
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'id';
+                input.value = idAdjunto;
+                
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
     </script>
 }
