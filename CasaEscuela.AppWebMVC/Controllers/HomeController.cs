@@ -16,25 +16,25 @@ namespace CasaEscuela.AppWebMVC.Controllers
     {
      
 
-        public HomeController(
-            )
+        private readonly IAnamnesisBL _anamnesisBL;
+
+        public HomeController(IAnamnesisBL anamnesisBL)
         {
-            
+            _anamnesisBL = anamnesisBL;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            // ==== Primera fila ====
-            ViewBag.TotalEstudiantes = 320;
-            ViewBag.ExpedientesActivos = 280;
-            ViewBag.TotalAnamnesis = 150;
-            ViewBag.TotalPreceptorias = 210;
+            var dashboardData = await _anamnesisBL.ObtenerDatosDashboardAsync();
 
-            // ==== Segunda fila ====
-            ViewBag.TotalAnalisis = 95;
-            ViewBag.TotalDocumentos = 430;
-            ViewBag.TotalPostClase = 180;
-            ViewBag.UsuariosActivos = 12;
+            ViewBag.TotalEstudiantes = dashboardData.TotalEstudiantes;
+            ViewBag.ExpedientesActivos = dashboardData.ExpedientesActivos;
+            ViewBag.TotalAnamnesis = dashboardData.TotalAnamnesis;
+            ViewBag.TotalPreceptorias = dashboardData.TotalPreceptorias;
+            ViewBag.TotalAnalisis = dashboardData.TotalAnalisis;
+            ViewBag.TotalDocumentos = dashboardData.TotalDocumentos;
+            ViewBag.TotalPostClase = dashboardData.TotalPostClase;
+            ViewBag.UsuariosActivos = dashboardData.UsuariosActivos;
 
             return View();
         }

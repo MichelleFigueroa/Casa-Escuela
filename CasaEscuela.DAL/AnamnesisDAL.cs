@@ -20,7 +20,7 @@ namespace CasaEscuela.DAL
             dbContext = context;
         }
 
-        public async Task<int>  GuardarAnamnesisAsync(EstudianteMantDTO pEstudiante, List<EstudianteFamiliarMantDTO> pFamiliares, AnamnesisMantDTO pAnamnesis)
+        public async Task<int> CrearAnamnesisAsync(EstudianteMantDTO pEstudiante, List<EstudianteFamiliarMantDTO> pFamiliares, AnamnesisMantDTO pAnamnesis)
         {
             using var transaction = await dbContext.Database.BeginTransactionAsync();
             try
@@ -315,6 +315,36 @@ namespace CasaEscuela.DAL
                 dbContext.AnamnesisAdjuntos.Remove(adjunto);
                 await dbContext.SaveChangesAsync();
             }
+        }
+        public async Task<DashboardDTO> ObtenerDatosDashboardAsync()
+        {
+            var data = new DashboardDTO();
+
+            // 1. Estudiantes y Expedientes (Activos)
+            data.TotalEstudiantes = await dbContext.Estudiantes.CountAsync();
+            data.ExpedientesActivos = await dbContext.Estudiantes.CountAsync(e => e.Estado);
+
+            // 2. Anamnesis
+            data.TotalAnamnesis = await dbContext.Anamnesis.CountAsync();
+
+            // 3. Preceptorias
+            data.TotalPreceptorias = await dbContext.EstudiantePreceptorias.CountAsync();
+
+            // 4. Analisis (For now equivalent to Anamnesis or placeholder)
+            data.TotalAnalisis = data.TotalAnamnesis; 
+
+            // 5. Documentos (Anamnesis + Preceptoria)
+            var docsAnamnesis = await dbContext.AnamnesisAdjuntos.CountAsync();
+            var docsPreceptoria = await dbContext.PreceptoriaAdjuntos.CountAsync();
+            data.TotalDocumentos = docsAnamnesis + docsPreceptoria;
+
+            // 6. Post Clase (Placeholder/Future feature)
+            data.TotalPostClase = 0; 
+
+            // 7. Usuarios Activos (Usuarios w/ Estado=1)
+            data.UsuariosActivos = await dbContext.Usuarios.CountAsync(u => u.Estado == 1); 
+
+            return data;
         }
     }
 }

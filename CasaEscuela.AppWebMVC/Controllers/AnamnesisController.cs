@@ -62,13 +62,8 @@ namespace CasaEscuela.AppWebMVC.Controllers
         {
             try
             {
-                int idEstudiante = await _anamnesisBL.GuardarAnamnesisAsync(
-                    model.Estudiante,
-                    model.Familiares,
-                    model.Anamnesis
-                );
-
-                return RedirectToAction("Expediente", new { idEstudiante });
+                int idEstudiante = await _anamnesisBL.CrearAnamnesisAsync(model.Estudiante, model.Familiares, model.Anamnesis);
+                return RedirectToAction("Expediente", new { idEstudiante = idEstudiante });
             }
             catch (Exception ex)
             {
