@@ -1,6 +1,7 @@
 using CasaEscuela.BL.DTOs;
 using CasaEscuela.BL.DTOs.EstudianteDTOs;
 using CasaEscuela.BL.Interfaces;
+using CasaEscuela.EN;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -225,5 +226,39 @@ namespace CasaEscuela.AppWebMVC.Controllers
             return View("Create", model); // reutiliza la vista Create
         }
 
+        public async Task<IActionResult> Reporte(int idEstudiante)
+        {
+            var registro = await _anamnesisBL.ObtenerAnamnesisRegistroPorIdEstudianteAsync(idEstudiante);
+            if (registro == null) return NotFound();
+
+            var preceptorias = await _preceptoriaBL.ObtenerPreceptoriasPorEstudianteAsync(idEstudiante);
+
+            var model = new EstudianteEN
+            {
+                IdEstudiante = registro.Estudiante.IdEstudiante,
+                Codigo = registro.Estudiante.Codigo,
+                Nombres = registro.Estudiante.Nombres,
+                Apellidos = registro.Estudiante.Apellidos,
+                Grado = registro.Estudiante.Grado,
+                Seccion = registro.Estudiante.Seccion,
+                Jornada = registro.Estudiante.Jornada,
+
+                Anamnesis = registro.Anamnesis == null ? null : new AnamnesisEN
+                {
+                    Observaciones = registro.Anamnesis.Observaciones,
+                    FechaEntrevista = registro.Anamnesis.FechaEntrevista
+                },
+
+                Preceptorias = preceptorias?.Select(p => new EstudiantePreceptoriaEN
+                {
+                    Fecha = p.Fecha,
+                    ProcesosTrabajados = p.ProcesosTrabajados,
+                    MetasSiguientes = p.MetasSiguientes,
+                    Recomendaciones = p.Recomendaciones
+                }).ToList()
+            };
+
+            return View("Reporte", model);
+        }
     }
 }

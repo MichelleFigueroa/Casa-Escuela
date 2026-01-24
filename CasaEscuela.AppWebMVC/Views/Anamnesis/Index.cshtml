@@ -48,6 +48,13 @@
                                                 <i class="fas fa-folder-open me-1"></i> Expediente
                                             </a>
 
+                                            <a href="@Url.Action("Reporte", "Anamnesis", new { idEstudiante = item.IdEstudiante })"
+                                               class="btn btn-sm btn-outline-secondary rounded shadow-sm"
+                                               title="Ver Reporte">
+                                                <i class="fas fa-file-alt me-1"></i> Reporte
+                                            </a>
+
+
                                             <a href="@Url.Action("Create", "Anamnesis", new { idEstudiante = item.IdEstudiante })"
                                                class="btn btn-sm btn-outline-primary rounded shadow-sm"
                                                title="Editar Anamnesis">
